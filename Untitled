@@ -1,0 +1,362 @@
+Implementation Plan (Cursor) — WeddingHub MVP 0) Pravila (za Cursor)
+
+Radi iterativno: svaki task mora završiti kompilirajuću app.
+
+Ne uvoditi feature koji nije u MVP.
+
+Sve inpute validirati sa zod.
+
+Ne izlagati email adrese u client kodu.
+
+Svaki POST endpoint ima rate limit + honeypot.
+
+1. Project setup
+   1.1 Create app
+
+Next.js 14 (App Router)
+
+Tailwind
+
+ESLint
+
+Env: .env.local
+
+Commands
+
+npx create-next-app@latest weddinghub --app --tailwind --eslint
+
+npm i prisma @prisma/client zod
+
+npx prisma init
+
+1.2 Env variables
+
+.env.local:
+
+DATABASE_URL=postgresql://...
+
+EMAIL_FROM=...
+
+EMAIL_TO_ADMIN=... (admin copy)
+
+EMAIL_PROVIDER= (optional)
+
+RESEND_API_KEY= OR SMTP creds (choose one)
+
+RATE_LIMIT_WINDOW_SEC=60
+
+RATE_LIMIT_MAX=10
+
+Ako ide najbrže: Resend. Ako hoćeš SMTP: Nodemailer.
+
+2. Data layer (Prisma)
+   2.1 Prisma schema
+
+Create prisma/schema.prisma with models:
+
+Provider
+
+id, name
+
+category enum: music | photo_video | decor
+
+subcategory string
+
+locationCity, locationRegion
+
+description
+
+priceFrom, priceTo (Int?)
+
+tags String[] (optional)
+
+galleryImages String[]
+
+videoLinks String[]
+
+isFeatured Boolean
+
+isPremium Boolean
+
+contactEmail String?
+
+contactPhone String?
+
+createdAt, updatedAt
+
+Lead
+
+id
+
+providerId (FK)
+
+customerName
+
+customerPhone
+
+customerEmail String?
+
+eventDate DateTime
+
+eventCity
+
+budget Int?
+
+message
+
+status enum: new | replied | closed
+
+createdAt
+
+2.2 Prisma client helper
+
+Create src/lib/db.ts to export singleton Prisma client.
+
+2.3 Migrations + seed
+
+npx prisma migrate dev --name init
+
+Create prisma/seed.ts with 15–30 demo providers (5/5/5)
+
+Add prisma.seed script in package.json
+
+npx prisma db seed
+
+3. Public pages (UI)
+   3.1 Routes
+
+/ — landing
+
+/kategorija/[category] — listing
+
+/profil/[id] — provider profile
+
+3.2 Shared UI components
+
+Create:
+
+src/components/ProviderCard.tsx
+
+src/components/Filters.tsx
+
+src/components/Gallery.tsx
+
+src/components/LeadForm.tsx
+
+3.3 Landing page
+
+Landing sections:
+
+Hero (3 CTA cards: Muzika / Foto / Dekor)
+
+Featured (top 6 providers where isFeatured = true)
+
+CTA “Pošalji upit”
+
+3.4 Listing page
+
+/kategorija/[category]:
+
+server fetch providers by category
+
+filters:
+
+city (query param)
+
+subcategory
+
+price range (min/max)
+
+sort (featured first)
+
+UI: grid cards
+
+3.5 Profile page
+
+/profil/[id]:
+
+show media (gallery + videoLinks)
+
+show location, price range, tags
+
+lead form “Pošalji upit”
+
+“Slični” providers (same category + city)
+
+4. API endpoints
+   4.1 GET providers
+
+Create:
+
+src/app/api/providers/route.ts
+
+supports query params: category, city, subcategory, priceMin, priceMax, q
+
+returns list
+
+4.2 GET provider by id
+
+src/app/api/providers/[id]/route.ts
+
+4.3 POST lead (core)
+
+src/app/api/leads/route.ts
+
+zod validate input
+
+anti-spam:
+
+honeypot field company (must be empty)
+
+rate limit by IP
+
+save lead to DB
+
+send email to provider (if contactEmail) + admin copy
+
+return { ok: true }
+
+5. Email sending
+   Option A (recommended): Resend
+
+Install:
+
+npm i resend
+
+Create:
+
+src/lib/email.ts
+
+sendLeadEmail({ provider, lead })
+
+Email content:
+
+subject: Novi upit — {provider.name} ({eventCity}, {eventDate})
+
+body: ime, telefon, email, datum, mjesto, budžet, poruka
+
+Option B: Nodemailer SMTP
+
+Install:
+
+npm i nodemailer
+Use SMTP env vars.
+
+6. Rate limiting (simple, MVP-safe)
+
+Create:
+
+src/lib/rateLimit.ts
+In-memory map:
+
+key: ip
+
+value: { count, resetAt }
+
+Notes:
+
+Works for MVP, but resets on deploy. Fine for start.
+
+Later: Upstash/Redis.
+
+7. Minimal admin (MVP)
+   7.1 Auth (simple)
+
+For MVP:
+
+basic password gate via env:
+
+ADMIN_PASSWORD=...
+
+Create /admin/login (sets cookie)
+
+Middleware checks cookie for /admin/\*
+
+7.2 Admin pages
+
+/admin/providers list + create/edit form
+
+/admin/leads list
+
+7.3 Admin API
+
+src/app/api/admin/providers/route.ts (GET/POST)
+
+src/app/api/admin/providers/[id]/route.ts (PUT/DELETE)
+
+src/app/api/admin/leads/route.ts (GET)
+
+Auth:
+
+check cookie or header token
+
+Alternativa: skip UI admin i uradi sve kroz Prisma Studio dok nema users. Ali pošto hoćeš monetizaciju i urednost, minimal admin je ok.
+
+8. SEO + quality
+
+Add metadata:
+
+generateMetadata for profile pages
+
+OpenGraph basic
+
+Sitemaps:
+
+src/app/sitemap.ts (providers + categories)
+
+Robots:
+
+src/app/robots.ts
+
+Performance:
+
+Next <Image> for gallery URLs (ako su remote, add domains in next.config.js)
+
+9. Acceptance checklist (MVP ready)
+
+Landing prikazuje 3 kategorije i featured
+
+Listing radi filtere i sort
+
+Profil prikazuje galeriju + video + CTA
+
+Lead forma šalje upit, snima u DB i šalje email
+
+Rate limit + honeypot radi
+
+Admin može dodati/izmijeniti provider + vidjeti leads
+
+Seed data postoji (min 15 profila)
+
+10. File/folder structure (target)
+    src/
+    app/
+    page.tsx
+    kategorija/[category]/page.tsx
+    profil/[id]/page.tsx
+    api/
+    providers/route.ts
+    providers/[id]/route.ts
+    leads/route.ts
+    admin/
+    providers/route.ts
+    providers/[id]/route.ts
+    leads/route.ts
+    admin/
+    login/page.tsx
+    providers/page.tsx
+    providers/[id]/page.tsx
+    leads/page.tsx
+    components/
+    ProviderCard.tsx
+    Filters.tsx
+    Gallery.tsx
+    LeadForm.tsx
+    lib/
+    db.ts
+    email.ts
+    rateLimit.ts
+    auth.ts
+    prisma/
+    schema.prisma
+    seed.ts

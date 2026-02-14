@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  new
+  replied
+  closed
+}
+
+model Provider {
+  id             String   @id @default(cuid())
+  name           String
+  category       String
+  subcategory    String
+  locationCity   String
+  serviceCities  String[] @default([])
+  isNationwide   Boolean  @default(false)
+  eventTypes     String[] @default(["wedding"])
+  description    String   @db.Text
+  galleryImages  String[] @default([])
+  videoLinks     String[] @default([])
+  phone          String?
+  email          String?
+  website        String?
+  details        Json?
+  createdAt      DateTime @default(now())
+
+  leads Lead[]
+}
+
+model Lead {
+  id             String    @id @default(cuid())
+  providerId     String
+  customerName   String
+  customerPhone  String
+  customerEmail  String?
+  eventDate      DateTime
+  eventCity      String
+  budget         Int?
+  message        String    @db.Text
+  status         LeadStatus @default(new)
+  createdAt      DateTime  @default(now())
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId])
+  @@index([createdAt])
+}
