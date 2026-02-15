@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { parse } from "csv-parse/sync";
 import * as fs from "fs";
 import * as path from "path";
@@ -128,7 +128,7 @@ async function main() {
         phone: p.phone,
         email: p.email,
         website: p.website,
-        details: p.details,
+        details: p.details as Prisma.InputJsonValue,
       },
     });
   }
