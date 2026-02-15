@@ -38,6 +38,8 @@ model Provider {
   createdAt      DateTime @default(now())
 
   leads Lead[]
+
+  @@unique([name, locationCity])
 }
 
 model Lead {
