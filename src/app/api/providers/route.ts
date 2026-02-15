@@ -68,6 +68,8 @@ export async function GET(request: NextRequest) {
       description: true,
       galleryImages: true,
       videoLinks: true,
+      coverImageUrl: true,
+      coverImageAttribution: true,
       createdAt: true,
     },
   });

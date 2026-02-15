@@ -10,6 +10,8 @@ export type ProviderCardProvider = {
   serviceCities: string[];
   isNationwide: boolean;
   galleryImages: string[];
+  coverImageUrl?: string | null;
+  coverImageAttribution?: string | null;
   eventTypes?: string[];
 };
 
@@ -35,7 +37,7 @@ export function ProviderCard({
   selectedCity,
   eventType = "wedding",
 }: ProviderCardProps) {
-  const thumb = provider.galleryImages?.[0];
+  const thumb = provider.coverImageUrl ?? provider.galleryImages?.[0];
   const servesThisCity =
     selectedCity && providerServesCity(provider, selectedCity);
   const showRadiUBadge =
@@ -67,13 +69,14 @@ export function ProviderCard({
       <Link href={`/profil/${provider.id}`} className="block">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-accent-soft/20">
-          {thumb?.startsWith("http") ? (
+          {thumb && (thumb.startsWith("http") || thumb.startsWith("/")) ? (
             <Image
               src={thumb}
               alt=""
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized={thumb.startsWith("/api/")}
             />
           ) : (
             <div className="flex h-full items-center justify-center text-muted/40">

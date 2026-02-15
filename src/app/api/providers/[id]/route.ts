@@ -21,6 +21,9 @@ export async function GET(
       description: true,
       galleryImages: true,
       videoLinks: true,
+      coverImageUrl: true,
+      coverImageSource: true,
+      coverImageAttribution: true,
       createdAt: true,
     },
   });

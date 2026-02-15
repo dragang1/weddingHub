@@ -235,6 +235,8 @@ export async function CategoryCityResults({
                       serviceCities: p.serviceCities ?? [],
                       isNationwide: p.isNationwide,
                       galleryImages: p.galleryImages ?? [],
+                      coverImageUrl: p.coverImageUrl ?? undefined,
+                      coverImageAttribution: p.coverImageAttribution ?? undefined,
                       eventTypes: p.eventTypes ?? [],
                     }}
                     selectedCity={cityDisplay}

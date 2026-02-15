@@ -139,13 +139,26 @@ export default async function ProfilePage({ params }: PageProps) {
     },
     take: 3,
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      locationCity: true,
+      serviceCities: true,
+      isNationwide: true,
+      galleryImages: true,
+      coverImageUrl: true,
+      coverImageAttribution: true,
+      eventTypes: true,
+    },
   });
 
   const backPath = categoryPath(provider.category as CategorySlug);
   const backUrl = `${backPath}/${slugifyCity(provider.locationCity)}`;
   const categoryTitle = categoryLabel(provider.category as CategorySlug);
-  const heroImage = provider.galleryImages?.[0];
-  const hasHero = heroImage && heroImage.startsWith("http");
+  const heroImage = provider.coverImageUrl ?? provider.galleryImages?.[0];
+  const hasHero =
+    heroImage &&
+    (heroImage.startsWith("http") || heroImage.startsWith("/"));
 
   return (
     <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-surface">
@@ -162,6 +175,7 @@ export default async function ProfilePage({ params }: PageProps) {
               className="object-cover"
               priority
               sizes="100vw"
+              unoptimized={heroImage.startsWith("/api/")}
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-accent-soft/40 to-rose-soft/50" />
@@ -326,6 +340,8 @@ export default async function ProfilePage({ params }: PageProps) {
                           serviceCities: p.serviceCities ?? [],
                           isNationwide: p.isNationwide,
                           galleryImages: p.galleryImages ?? [],
+                          coverImageUrl: p.coverImageUrl ?? undefined,
+                          coverImageAttribution: p.coverImageAttribution ?? undefined,
                           eventTypes: p.eventTypes ?? [],
                         }}
                       />

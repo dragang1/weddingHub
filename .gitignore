@@ -27,6 +27,10 @@ yarn-error.log*
 .env*.local
 .env
 
+# private data (CSV imports, spreadsheets – phones, addresses, etc.)
+prisma/*.csv
+*.csv
+
 # vercel
 .vercel
 
