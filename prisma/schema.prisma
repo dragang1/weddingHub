@@ -31,6 +31,7 @@ model Provider {
   phone          String?
   email          String?
   website        String?
+  address        String?
   coverImageUrl  String?
   coverImageSource       String?  // "og" | "google_places" | "placeholder"
   coverImageAttribution  String? // Google html_attributions or null

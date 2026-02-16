@@ -66,13 +66,10 @@ function mapCategory(category: string): string {
 }
 
 function buildDetails(row: CsvRow): Record<string, string | null> | undefined {
-  const address = orNull(row.address);
   const instagram = orNull(row.instagram);
   const facebook = orNull(row.facebook);
-  if (address === null && instagram === null && facebook === null)
-    return undefined;
+  if (instagram === null && facebook === null) return undefined;
   return {
-    address: address ?? null,
     instagram: instagram ?? null,
     facebook: facebook ?? null,
   };
@@ -115,6 +112,8 @@ async function main() {
       where: { name, locationCity },
     });
 
+    const address = orNull(row.address) ?? existing?.address ?? null;
+
     const data = {
       name,
       category,
@@ -129,6 +128,7 @@ async function main() {
       phone: normalizePhone(row.phone) ?? existing?.phone ?? null,
       email: orNull(row.email) ?? existing?.email ?? null,
       website: normalizeWebsite(row.website) ?? existing?.website ?? null,
+      address,
       ...(details !== undefined && { details }),
     };
 
@@ -147,6 +147,7 @@ async function main() {
           phone: data.phone,
           email: data.email,
           website: data.website,
+          address: data.address,
           ...(details !== undefined && { details }),
         },
       });
@@ -167,6 +168,7 @@ async function main() {
           phone: data.phone,
           email: data.email,
           website: data.website,
+          address: data.address,
           ...(details !== undefined && { details }),
         },
       });

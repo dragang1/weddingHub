@@ -6,17 +6,20 @@ type ProfileContactCardProps = {
   phone: string | null;
   email: string | null;
   website: string | null;
+  address?: string | null;
 };
 
 export function ProfileContactCard({
   phone,
   email,
   website,
+  address = null,
 }: ProfileContactCardProps) {
   const [copied, setCopied] = useState(false);
 
   const copyContact = () => {
     const parts: string[] = [];
+    if (address) parts.push(`Adresa: ${address}`);
     if (phone) parts.push(`Tel: ${phone}`);
     if (email) parts.push(`Email: ${email}`);
     if (website) parts.push(`Web: ${website}`);
@@ -29,7 +32,7 @@ export function ProfileContactCard({
     }
   };
 
-  const hasAny = phone || email || website;
+  const hasAny = phone || email || website || address;
 
   return (
     <div className="rounded-2xl border border-border bg-white shadow-card overflow-hidden">
@@ -42,6 +45,25 @@ export function ProfileContactCard({
       <div className="p-4 sm:p-5">
         {hasAny && (
           <ul className="space-y-2.5">
+            {address && (
+              <li>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/50 px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent/30 hover:bg-accent-soft/30"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                  </span>
+                  <span className="truncate flex-1 min-w-0">{address}</span>
+                  <span className="text-[11px] font-semibold uppercase text-accent shrink-0">Karta</span>
+                </a>
+              </li>
+            )}
             {phone && (
               <li>
                 <a

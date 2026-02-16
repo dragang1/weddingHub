@@ -25,6 +25,7 @@ const createProviderSchema = z.object({
   phone: z.string().optional(),
   email: z.string().optional(),
   website: z.string().optional(),
+  address: z.string().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -115,6 +116,7 @@ export async function POST(request: NextRequest) {
       phone: data.phone ?? null,
       email: data.email ?? null,
       website: data.website ?? null,
+      address: data.address ?? null,
     },
   });
   return Response.json(provider);

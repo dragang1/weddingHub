@@ -197,7 +197,18 @@ export default async function ProfilePage({ params }: PageProps) {
                 {provider.name}
               </h1>
               <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-white/90 sm:text-base">
-                <span>{provider.locationCity}</span>
+                {provider.address ? (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(provider.address)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-white transition-colors"
+                  >
+                    {provider.address}
+                  </a>
+                ) : (
+                  <span>{provider.locationCity}</span>
+                )}
                 <span className="text-white/50">·</span>
                 <span>{provider.subcategory}</span>
                 {provider.category !== "wedding_salon" && provider.category !== "beauty" && (
@@ -234,7 +245,18 @@ export default async function ProfilePage({ params }: PageProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
               </svg>
-              <span className="font-medium text-ink">{provider.locationCity}</span>
+              {provider.address ? (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(provider.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-ink hover:text-accent transition-colors underline underline-offset-2"
+                >
+                  {provider.address}
+                </a>
+              ) : (
+                <span className="font-medium text-ink">{provider.locationCity}</span>
+              )}
             </div>
             <div className="hidden h-4 w-px bg-border sm:block" />
             <div className="flex items-center gap-2 text-sm text-muted">
@@ -273,6 +295,7 @@ export default async function ProfilePage({ params }: PageProps) {
                   phone={provider.phone}
                   email={provider.email}
                   website={provider.website}
+                  address={provider.address}
                 />
               </div>
 
@@ -358,6 +381,7 @@ export default async function ProfilePage({ params }: PageProps) {
                 phone={provider.phone}
                 email={provider.email}
                 website={provider.website}
+                address={provider.address}
               />
             </aside>
           </div>

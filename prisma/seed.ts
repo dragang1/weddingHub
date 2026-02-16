@@ -40,12 +40,10 @@ function mapCategory(category: string): string {
 }
 
 function buildDetails(row: CsvRow): Record<string, string | null> | null {
-  const address = orNull(row.address);
   const instagram = orNull(row.instagram);
   const facebook = orNull(row.facebook);
-  if (address === null && instagram === null && facebook === null) return null;
+  if (instagram === null && facebook === null) return null;
   return {
-    address: address ?? null,
     instagram: instagram ?? null,
     facebook: facebook ?? null,
   };
@@ -75,6 +73,7 @@ async function main() {
     phone: string | null;
     email: string | null;
     website: string | null;
+    address: string | null;
     details: Record<string, string | null> | null;
   }> = [];
 
@@ -105,6 +104,7 @@ async function main() {
       phone: orNull(row.phone),
       email: orNull(row.email),
       website: orNull(row.website),
+      address: orNull(row.address),
       details,
     });
   }
@@ -128,6 +128,7 @@ async function main() {
         phone: p.phone,
         email: p.email,
         website: p.website,
+        address: p.address,
         details: p.details as Prisma.InputJsonValue,
       },
     });

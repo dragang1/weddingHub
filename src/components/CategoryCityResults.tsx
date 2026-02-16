@@ -71,17 +71,10 @@ export async function CategoryCityResults({
       })
       .then((rows) => {
         const set = new Set<string>();
-        if (
-          categorySlug === "wedding_salon" ||
-          categorySlug === "beauty"
-        ) {
-          rows.forEach((r) => set.add(r.locationCity));
-        } else {
-          rows.forEach((r) => {
-            set.add(r.locationCity);
-            r.serviceCities?.forEach((c) => set.add(c));
-          });
-        }
+        rows.forEach((r) => {
+          set.add(r.locationCity);
+          r.serviceCities?.forEach((c) => set.add(c));
+        });
         return Array.from(set).sort();
       }),
     prisma.provider

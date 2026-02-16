@@ -34,6 +34,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
     phone: "",
     email: "",
     website: "",
+    address: "",
   });
 
   useEffect(() => {
@@ -53,6 +54,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         phone: provider.phone ?? "",
         email: provider.email ?? "",
         website: provider.website ?? "",
+        address: provider.address ?? "",
       });
     }
   }, [provider]);
@@ -97,6 +99,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
       phone: form.phone || undefined,
       email: form.email || undefined,
       website: form.website || undefined,
+      address: form.address || undefined,
     };
 
     try {
@@ -279,6 +282,16 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
           rows={2}
           className="input-field w-full"
           placeholder="https://youtube.com/..."
+        />
+      </div>
+      <div>
+        <label className="mb-1 block text-sm font-semibold text-ink">Adresa</label>
+        <input
+          type="text"
+          value={form.address}
+          onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+          className="input-field w-full"
+          placeholder="npr. Ulica i broj, grad"
         />
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
