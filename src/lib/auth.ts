@@ -15,7 +15,13 @@ export async function isAdmin(): Promise<boolean> {
   const cookie = cookieStore.get(COOKIE_NAME)?.value;
   if (!cookie) return false;
   try {
-    return cookie.length === expected.length && timingSafeEqual(Buffer.from(cookie, "utf8"), Buffer.from(expected, "utf8"));
+    return (
+      cookie.length === expected.length &&
+      timingSafeEqual(
+        Buffer.from(cookie, "utf8"),
+        Buffer.from(expected, "utf8"),
+      )
+    );
   } catch {
     return false;
   }
@@ -27,7 +33,7 @@ export async function setAdminCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.COOKIE_SECURE === "true",
     sameSite: "lax",
     maxAge: COOKIE_MAX_AGE,
     path: "/",
@@ -43,7 +49,13 @@ export function verifyPassword(password: string): boolean {
   const expected = process.env.ADMIN_PASSWORD ?? "";
   if (!expected) return false;
   try {
-    return password.length === expected.length && timingSafeEqual(Buffer.from(password, "utf8"), Buffer.from(expected, "utf8"));
+    return (
+      password.length === expected.length &&
+      timingSafeEqual(
+        Buffer.from(password, "utf8"),
+        Buffer.from(expected, "utf8"),
+      )
+    );
   } catch {
     return false;
   }
