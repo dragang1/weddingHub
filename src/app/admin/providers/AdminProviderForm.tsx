@@ -16,6 +16,7 @@ type AdminProviderFormProps = {
 export function AdminProviderForm({ provider }: AdminProviderFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [form, setForm] = useState({
@@ -117,6 +118,27 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
     } catch {
       setError("Greška u mreži");
       setLoading(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!provider) return;
+    if (!confirm("Jesi li siguran da želiš obrisati ovog pružatelja? Ova radnja se ne može poništiti.")) return;
+    setError("");
+    setDeleteLoading(true);
+    try {
+      const res = await fetch(`/api/admin/providers/${provider.id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Greška pri brisanju");
+        setDeleteLoading(false);
+        return;
+      }
+      router.push("/admin/providers");
+      router.refresh();
+    } catch {
+      setError("Greška u mreži");
+      setDeleteLoading(false);
     }
   }
 
@@ -289,10 +311,10 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         </div>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || deleteLoading}
           className="btn-primary"
         >
           {loading ? "Spremanje…" : "Spremi"}
@@ -300,10 +322,21 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
+          disabled={deleteLoading}
           className="btn-secondary"
         >
           Odustani
         </button>
+        {provider && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={loading || deleteLoading}
+            className="ml-auto rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+          >
+            {deleteLoading ? "Brisanje…" : "Obriši pružatelja"}
+          </button>
+        )}
       </div>
     </form>
   );
