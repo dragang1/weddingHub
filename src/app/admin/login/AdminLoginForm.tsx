@@ -18,6 +18,7 @@ export function AdminLoginForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
+        credentials: "include",
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -36,7 +37,10 @@ export function AdminLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
       <div>
-        <label htmlFor="password" className="mb-1 block text-sm font-semibold text-ink">
+        <label
+          htmlFor="password"
+          className="mb-1 block text-sm font-semibold text-ink"
+        >
           Lozinka
         </label>
         <input
