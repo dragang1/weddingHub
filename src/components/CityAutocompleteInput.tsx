@@ -146,13 +146,6 @@ export const CityAutocompleteInput = forwardRef<
         aria-describedby={ariaDescribedBy}
         aria-autocomplete="list"
         aria-controls={showDropdown ? `${id}-listbox` : undefined}
-        aria-activedescendant={
-          showDropdown &&
-          highlightedIndex >= 0 &&
-          suggestions[highlightedIndex]
-            ? `${id}-option-${highlightedIndex}`
-            : undefined
-        }
       />
       {showDropdown && (
         <ul

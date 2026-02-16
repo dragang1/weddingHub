@@ -3,6 +3,8 @@
  * No database table; slugs are derived from display names.
  */
 
+export type KnownCity = { name: string; slug: string };
+
 const DIACRITICS: Record<string, string> = {
   č: "c",
   ć: "c",
@@ -29,6 +31,7 @@ export function stripDiacritics(input: string): string {
 
 /**
  * Title-case a city string: "banja luka" → "Banja Luka".
+ * Preserves diacritics.
  */
 export function titleCaseCity(input: string): string {
   if (!input || typeof input !== "string") return "";
@@ -40,63 +43,53 @@ export function titleCaseCity(input: string): string {
 }
 
 /**
- * Normalize a city string for DB storage so filtering matches URL slugs
- * (prettyCityFromSlug produces no diacritics, Title Case).
- * - trim, collapse whitespace, strip diacritics, title-case.
- * Returns empty string if input is empty after trim.
+ * Normalize city for DB storage: preserves diacritics.
+ * Trim, collapse whitespace, Title Case. For display storage.
  */
 export function normalizeCityForDb(input: string): string {
   if (!input || typeof input !== "string") return "";
   const t = input.trim().replace(/\s+/g, " ");
   if (!t) return "";
-  const noDiacritics = removeDiacritics(t);
-  return titleCaseCity(noDiacritics);
+  return titleCaseCity(t);
 }
 
 /**
- * Parse comma- or newline-separated city list into normalized array.
- * - split by /[,\n]+/, normalize each via normalizeCityForDb
- * - remove empties, dedupe case-insensitive preserving order
+ * Strip diacritics and normalize for slug input (ASCII preparation).
  */
-export function parseCityList(input: string): string[] {
-  if (!input || typeof input !== "string") return [];
-  const raw = input.split(/[,\n]+/).map((s) => normalizeCityForDb(s.trim())).filter(Boolean);
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const city of raw) {
-    const key = city.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    result.push(city);
-  }
-  return result;
+export function normalizeCityForSlug(input: string): string {
+  if (!input || typeof input !== "string") return "";
+  const t = input.trim().replace(/\s+/g, " ");
+  if (!t) return "";
+  return removeDiacritics(t).toLowerCase();
 }
 
 /**
- * Converts a city name (user input or display) to a URL-safe slug.
- * - trim, lowercase
- * - spaces/underscores → single hyphen
- * - diacritics (čćđšž) → ccdsz
- * - collapse multiple dashes
+ * Converts a city name to a URL-safe slug.
+ * Removes diacritics, allows only [a-z0-9\s_-], hyphens for spaces.
  */
 export function slugifyCity(input: string): string {
   if (!input || typeof input !== "string") return "";
   let t = input.trim().toLowerCase();
   t = removeDiacritics(t);
+  t = t.replace(/[^a-z0-9\s_-]/g, "");
   t = t.replace(/[\s_]+/g, "-");
   t = t.replace(/-+/g, "-").replace(/^-|-$/g, "");
   return t;
 }
 
-/** Known BiH cities (display name, normalized) for slug resolution and autocomplete */
-const KNOWN_CITIES: string[] = [
+/** Compact form for matching: lowercase, no spaces/dashes (e.g. "banjaluka") */
+function compactSlug(s: string): string {
+  return slugifyCity(s).replace(/-/g, "");
+}
+
+const KNOWN_CITY_NAMES_RAW = [
   "Banja Luka",
   "Sarajevo",
   "Mostar",
   "Tuzla",
   "Zenica",
   "Doboj",
-  "Siroki Brijeg",
+  "Široki Brijeg",
   "Trebinje",
   "Prijedor",
   "Bijeljina",
@@ -105,34 +98,47 @@ const KNOWN_CITIES: string[] = [
   "Livno",
   "Doboj Istok",
   "Gračanica",
-  "Gradacac",
+  "Gradačac",
   "Visoko",
-  "Gorazde",
+  "Goražde",
   "Lukavac",
   "Kakanj",
   "Sanski Most",
   "Bosanska Krupa",
   "Jajce",
   "Neum",
-  "Modrica",
-  "Zivinice",
-  "Capljina",
-  "Bihac",
-  "Brcko",
-  "Bileca",
-].map((name) => normalizeCityForDb(name)).filter(Boolean);
+  "Modriča",
+  "Živinice",
+  "Čapljina",
+  "Bihać",
+  "Brčko",
+  "Bileća",
+  "Gradiška",
+];
 
-/** Exported for autocomplete; same list as used for canonical slug resolution. */
-export const KNOWN_CITY_NAMES: string[] = KNOWN_CITIES;
+const KNOWN_CITIES: KnownCity[] = KNOWN_CITY_NAMES_RAW.map((raw) => {
+  const name = normalizeCityForDb(raw);
+  return { name, slug: slugifyCity(name) };
+});
+
+/** Compact form → canonical slug for fast lookup */
+const COMPACT_TO_SLUG = new Map<string, string>();
+for (const c of KNOWN_CITIES) {
+  COMPACT_TO_SLUG.set(compactSlug(c.name), c.slug);
+  COMPACT_TO_SLUG.set(compactSlug(c.slug), c.slug);
+}
+
+/** Pretty display names (normalized, with diacritics) for autocomplete and UI. */
+export const KNOWN_CITY_NAMES: string[] = KNOWN_CITIES.map((c) => c.name);
 
 /**
- * Filter known cities for autocomplete: case-insensitive, diacritics ignored.
- * Prefix matches first, then contains. Returns at most maxSuggestions (default 8).
+ * Filter known cities for autocomplete. Returns pretty display names.
+ * Matching: case-insensitive, diacritics ignored. Prefix first, then contains.
  */
 export function filterCitiesForAutocomplete(
   query: string,
   knownCities: string[] = KNOWN_CITY_NAMES,
-  maxSuggestions: number = 8
+  maxSuggestions: number = 8,
 ): string[] {
   const q = (query || "").trim();
   if (!q) return [];
@@ -148,15 +154,9 @@ export function filterCitiesForAutocomplete(
   return combined.slice(0, maxSuggestions);
 }
 
-/** Compact form for matching: lowercase, no spaces/dashes (e.g. "banjaluka") */
-function compactSlug(s: string): string {
-  return slugifyCity(s).replace(/-/g, "");
-}
-
 /**
  * Resolve user city input to canonical URL slug.
- * E.g. "banjaluka" or "banja luka" → "banja-luka"; "Banja Luka" → "banja-luka".
- * Uses known cities so "banjaluka" matches "Banja Luka" and yields slug "banja-luka".
+ * "banjaluka", "Banja Luka", "banja-luka" → "banja-luka"
  */
 export function cityInputToCanonicalSlug(input: string): string {
   if (!input || typeof input !== "string") return "";
@@ -164,31 +164,58 @@ export function cityInputToCanonicalSlug(input: string): string {
   if (!trimmed) return "";
   const compact = compactSlug(trimmed);
   if (!compact) return "";
-  for (const known of KNOWN_CITIES) {
-    if (compactSlug(known) === compact) return slugifyCity(known);
-  }
-  return slugifyCity(normalizeCityForDb(trimmed));
+  const slug = COMPACT_TO_SLUG.get(compact);
+  if (slug) return slug;
+  return slugifyCity(trimmed);
 }
 
 /**
- * Converts a URL slug back to a display-friendly city name.
- * - decode (handles encoded slugs if needed)
- * - replace - with space
- * - Title Case (e.g. Sarajevo, Banja Luka)
- * No diacritics restoration (keep it simple).
+ * Convert URL slug to pretty display name. Known cities: normalized name with diacritics.
+ * Unknown: title-cased fallback (replace -/_ with space, collapse, no diacritic restoration).
  */
 export function prettyCityFromSlug(slug: string): string {
   if (!slug || typeof slug !== "string") return "";
-  const decoded = decodeURIComponent(slug.trim());
-  const withSpaces = decoded.replace(/-+/g, " ");
-  return withSpaces
-    .split(/\s+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(slug.trim());
+  } catch {
+    decoded = slug.trim();
+  }
+  const canonical = slugifyCity(decoded);
+  const known = KNOWN_CITIES.find((c) => c.slug === canonical);
+  if (known) return known.name;
+  const fallbackString = decoded
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return titleCaseCity(fallbackString);
 }
 
-/** Popular cities for home chips and listing empty state */
-export const POPULAR_CITY_NAMES = [
+/**
+ * Parse comma/newline city list. Output: pretty names (normalized, diacritics preserved).
+ * Dedupe: diacritics-insensitive, case-insensitive.
+ */
+export function parseCityList(input: string): string[] {
+  if (!input || typeof input !== "string") return [];
+  const raw = input
+    .split(/[,\n]+/)
+    .map((s) => normalizeCityForDb(s.trim()))
+    .filter(Boolean);
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const city of raw) {
+    const key = stripDiacritics(city).toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const slug = cityInputToCanonicalSlug(city);
+    const pretty = slug ? prettyCityFromSlug(slug) : city;
+    result.push(pretty);
+  }
+  return result;
+}
+
+/** Popular cities for home chips and listing empty state (pretty with diacritics) */
+export const POPULAR_CITY_NAMES: string[] = [
   "Sarajevo",
   "Banja Luka",
   "Mostar",
