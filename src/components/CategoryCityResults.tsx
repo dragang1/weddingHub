@@ -45,6 +45,7 @@ export async function CategoryCityResults({
   const eventType = parseEventType(eventParam ?? null);
 
   const whereBase = {
+    isActive: true,
     category: categorySlug,
     ...(Object.keys(cityFilter).length > 0 ? cityFilter : {}),
     ...(subcategory ? { subcategory } : {}),
@@ -65,7 +66,7 @@ export async function CategoryCityResults({
     }),
     prisma.provider
       .findMany({
-        where: { category: categorySlug },
+        where: { isActive: true, category: categorySlug },
         select: { locationCity: true, serviceCities: true },
       })
       .then((rows) => {
@@ -85,7 +86,7 @@ export async function CategoryCityResults({
       }),
     prisma.provider
       .findMany({
-        where: { category: categorySlug },
+        where: { isActive: true, category: categorySlug },
         select: { subcategory: true },
         distinct: ["subcategory"],
         orderBy: { subcategory: "asc" },

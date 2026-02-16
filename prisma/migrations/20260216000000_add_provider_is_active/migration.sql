@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Provider" ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN NOT NULL DEFAULT true;

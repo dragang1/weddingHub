@@ -125,7 +125,7 @@ export async function generateMetadata({
 export default async function ProfilePage({ params }: PageProps) {
   const { id } = await params;
   const provider = await prisma.provider.findUnique({ where: { id } });
-  if (!provider) notFound();
+  if (!provider || (provider as { isActive?: boolean }).isActive === false) notFound();
 
   const cityFilter = cityWhereClause(
     provider.locationCity,
@@ -133,6 +133,7 @@ export default async function ProfilePage({ params }: PageProps) {
   );
   const similar = await prisma.provider.findMany({
     where: {
+      isActive: true,
       category: provider.category,
       id: { not: provider.id },
       ...cityFilter,

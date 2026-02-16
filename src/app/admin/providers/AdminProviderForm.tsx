@@ -25,6 +25,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
     locationCity: "",
     serviceCities: "",
     isNationwide: false,
+    isActive: true,
     eventTypes: ["wedding"] as EventTypeSlug[],
     description: "",
     galleryImages: "",
@@ -43,6 +44,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         locationCity: provider.locationCity,
         serviceCities: (provider.serviceCities ?? []).join(", "),
         isNationwide: provider.isNationwide ?? false,
+        isActive: provider.isActive ?? true,
         eventTypes: (provider.eventTypes ?? ["wedding"]) as EventTypeSlug[],
         description: provider.description,
         galleryImages: (provider.galleryImages ?? []).join("\n"),
@@ -86,6 +88,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
       locationCity,
       serviceCities,
       isNationwide: form.isNationwide,
+      isActive: form.isActive,
       eventTypes: form.eventTypes,
       description: form.description,
       galleryImages: form.galleryImages.split("\n").map((s) => s.trim()).filter(Boolean),
@@ -207,7 +210,7 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         </div>
         <p className="mt-1 text-xs text-muted">Odaberite barem jednu vrstu.</p>
       </div>
-      <div>
+      <div className="flex flex-wrap gap-6">
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -216,6 +219,15 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
             className="rounded"
           />
           <span className="text-sm text-ink">Radi u cijeloj BiH</span>
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={form.isActive}
+            onChange={(e) => setForm((f) => ({ ...f, isActive: e.target.checked }))}
+            className="rounded"
+          />
+          <span className="text-sm text-ink">Aktivan (vidljiv na sajtu)</span>
         </label>
       </div>
       <div>

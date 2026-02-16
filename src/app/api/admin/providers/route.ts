@@ -25,6 +25,7 @@ const createProviderSchema = z.object({
   phone: z.string().optional(),
   email: z.string().optional(),
   website: z.string().optional(),
+  isActive: z.boolean().optional(),
 });
 
 async function requireAdmin() {
@@ -106,6 +107,7 @@ export async function POST(request: NextRequest) {
       locationCity,
       serviceCities,
       isNationwide,
+      isActive: data.isActive ?? true,
       eventTypes,
       description: data.description,
       galleryImages: data.galleryImages ?? [],

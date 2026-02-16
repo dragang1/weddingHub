@@ -44,6 +44,7 @@ export default async function AdminProvidersPage() {
               <th className="px-4 py-3 text-left section-label">Kategorija</th>
               <th className="px-4 py-3 text-left section-label">Grad</th>
               <th className="px-4 py-3 text-left section-label">Područje</th>
+              <th className="px-4 py-3 text-left section-label">Aktivan</th>
               <th className="px-4 py-3 text-right section-label">Akcije</th>
             </tr>
           </thead>
@@ -61,6 +62,9 @@ export default async function AdminProvidersPage() {
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-sm text-muted">
                   {serviceAreaSummary(p)}
+                </td>
+                <td className="whitespace-nowrap px-4 py-3 text-sm text-muted">
+                  {(p as { isActive?: boolean }).isActive !== false ? "Da" : "Ne"}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
                   <Link

@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap() {
   const providers = await prisma.provider.findMany({
+    where: { isActive: true },
     select: { id: true, createdAt: true },
   });
 

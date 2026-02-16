@@ -35,6 +35,7 @@ model Provider {
   coverImageSource       String?  // "og" | "google_places" | "placeholder"
   coverImageAttribution  String? // Google html_attributions or null
   details        Json?
+  isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
 
   leads Lead[]

@@ -26,6 +26,7 @@ const updateProviderSchema = z.object({
   phone: z.string().nullable().optional(),
   email: z.string().nullable().optional(),
   website: z.string().nullable().optional(),
+  isActive: z.boolean().optional(),
 });
 
 async function requireAdmin() {
@@ -112,6 +113,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       ...(data.phone !== undefined && { phone: data.phone }),
       ...(data.email !== undefined && { email: data.email }),
       ...(data.website !== undefined && { website: data.website }),
+      ...(data.isActive !== undefined && { isActive: data.isActive }),
     },
   });
   return Response.json(provider);
