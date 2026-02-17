@@ -1,4 +1,4 @@
-import { categoryLabel, categoryPath } from "@/lib/categories";
+import { categoryLabel, categoryPath, categoryPathSegment } from "@/lib/categories";
 import type { CategorySlug } from "@/lib/categories";
 import { slugifyCity } from "@/lib/cities";
 import { parseSearchQuery } from "./parseQuery";
@@ -48,7 +48,7 @@ export function getSuggestions(input: string): Suggestion[] {
     });
     suggestions.push({
       label: `Prikaži sve ${categoryLabel(parsed.category)}`,
-      href: `/kategorija/${parsed.category}${eventQ}`,
+      href: `/kategorija/${categoryPathSegment(parsed.category)}${eventQ}`,
       kind: "category",
     });
   }
@@ -92,12 +92,12 @@ export function getSuggestions(input: string): Suggestion[] {
     } else {
       suggestions.push({
         label: "Svadbeni salon — odaberi grad",
-        href: "/kategorija/wedding_salon",
+        href: "/kategorija/svadbeni-salon",
         kind: "category",
       });
       suggestions.push({
         label: "Ljepota (šminka/frizura) — odaberi grad",
-        href: "/kategorija/beauty",
+        href: "/kategorija/ljepota",
         kind: "category",
       });
     }

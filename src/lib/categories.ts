@@ -67,20 +67,16 @@ export const CATEGORIES: CategoryConfig[] = [
   },
 ];
 
-/** Emoji icons for category cards and strips. Key is CategorySlug. */
-export const CATEGORY_ICONS: Record<string, string> = {
-  music: "🎵",
-  photo_video: "📷",
-  wedding_salon: "👗",
-  cakes: "🎂",
-  decoration: "💐",
-  transport: "🚗",
-  beauty: "💄",
-};
-
 export function parseCategory(input: string): CategorySlug | null {
-  const match = CATEGORIES.find((c) => c.slug === input);
-  return match?.slug ?? null;
+  const bySlug = CATEGORIES.find((c) => c.slug === input);
+  if (bySlug) return bySlug.slug;
+  return slugFromPathSegment(input);
+}
+
+/** BHS path segment for SEO (e.g. "muzika", "fotografija") - no leading slash */
+export function categoryPathSegment(slug: CategorySlug): string {
+  const match = CATEGORIES.find((c) => c.slug === slug);
+  return match ? match.path.replace(/^\//, "") : slug;
 }
 
 export function categoryLabel(slug: CategorySlug): string {

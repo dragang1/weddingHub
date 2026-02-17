@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/db";
+import { CATEGORIES, categoryPathSegment } from "@/lib/categories";
+import type { CategorySlug } from "@/lib/categories";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? "https://weddinghub.example.com";
 
@@ -17,11 +19,12 @@ export default async function sitemap() {
     priority: 0.8,
   }));
 
-  const categoryUrls = [
-    { url: `${BASE}/kategorija/music`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
-    { url: `${BASE}/kategorija/photo_video`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
-    { url: `${BASE}/kategorija/decor`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
-  ];
+  const categoryUrls = CATEGORIES.map((cat) => ({
+    url: `${BASE}/kategorija/${categoryPathSegment(cat.slug as CategorySlug)}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  }));
 
   return [
     { url: BASE, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },

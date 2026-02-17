@@ -139,7 +139,7 @@ export function ListingFilterBar({
               parseEventType(e.target.value) as EventTypeSlug
             )
           }
-          className="input-field py-2.5 text-sm"
+          className="input-field py-2.5"
           aria-label="Prilika"
         >
           {EVENT_TYPES.map((ev) => (
@@ -163,7 +163,7 @@ export function ListingFilterBar({
             id="listing-subcategory"
             value={subcategory}
             onChange={(e) => updateSubcategory(e.target.value)}
-            className="input-field py-2.5 text-sm"
+            className="input-field py-2.5"
             aria-label="Podkategorija"
           >
             <option value="">Sve</option>

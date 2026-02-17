@@ -10,11 +10,12 @@ const eventTypesSchema = z
   .min(1, "Odaberite barem jednu vrstu događaja");
 
 const createProviderSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1),
   category: z.string().refine((s) => parseCategory(s) !== null, {
     message: "Invalid category; use one of: music, photo_video, wedding_salon, cakes, decoration, transport, beauty",
   }),
-  subcategory: z.string().min(1),
+  subcategory: z.string().optional(),
   locationCity: z.string().min(1),
   serviceCities: z.array(z.string()).optional(),
   isNationwide: z.boolean().optional(),
@@ -26,6 +27,11 @@ const createProviderSchema = z.object({
   email: z.string().optional(),
   website: z.string().optional(),
   address: z.string().optional(),
+  imageKey: z.string().nullable().optional(),
+  coverImageKey: z.string().nullable().optional(),
+  galleryImageKeys: z.array(z.string()).optional(),
+  instagram: z.string().nullable().optional(),
+  facebook: z.string().nullable().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -100,11 +106,10 @@ export async function POST(request: NextRequest) {
   }
 
   const eventTypes = (data.eventTypes?.length ? data.eventTypes : ["wedding"]) as string[];
-  const provider = await prisma.provider.create({
-    data: {
-      name: data.name,
+  const createData: Parameters<typeof prisma.provider.create>[0]["data"] = {
+    name: data.name,
       category: categorySlug,
-      subcategory: data.subcategory,
+      subcategory: data.subcategory?.trim() ?? "",
       locationCity,
       serviceCities,
       isNationwide,
@@ -117,7 +122,17 @@ export async function POST(request: NextRequest) {
       email: data.email ?? null,
       website: data.website ?? null,
       address: data.address ?? null,
-    },
-  });
+      imageKey: data.imageKey ?? null,
+      coverImageKey: data.coverImageKey ?? null,
+      galleryImageKeys: data.galleryImageKeys ?? [],
+      ...((): { details?: Record<string, string | null> } => {
+        const ig = data.instagram?.trim() || null;
+        const fb = data.facebook?.trim() || null;
+        if (!ig && !fb) return {};
+        return { details: { instagram: ig, facebook: fb } };
+      })(),
+  };
+  if (data.id) createData.id = data.id;
+  const provider = await prisma.provider.create({ data: createData });
   return Response.json(provider);
 }

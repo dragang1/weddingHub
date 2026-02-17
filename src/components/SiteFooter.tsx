@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/categories";
+import { CATEGORIES, categoryPathSegment } from "@/lib/categories";
 
 export function SiteFooter() {
   return (
@@ -33,7 +33,7 @@ export function SiteFooter() {
               {CATEGORIES.slice(0, 4).map((cat) => (
                 <li key={cat.slug}>
                   <Link
-                    href={`/kategorija/${cat.slug}`}
+                    href={`/kategorija/${categoryPathSegment(cat.slug)}`}
                     className="text-sm text-ink/70 transition-colors hover:text-accent"
                   >
                     {cat.label}
@@ -52,7 +52,7 @@ export function SiteFooter() {
               {CATEGORIES.slice(4).map((cat) => (
                 <li key={cat.slug}>
                   <Link
-                    href={`/kategorija/${cat.slug}`}
+                    href={`/kategorija/${categoryPathSegment(cat.slug)}`}
                     className="text-sm text-ink/70 transition-colors hover:text-accent"
                   >
                     {cat.label}
@@ -82,6 +82,14 @@ export function SiteFooter() {
                   className="text-sm text-ink/70 transition-colors hover:text-accent"
                 >
                   Sve kategorije
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/postanite-partner"
+                  className="text-sm text-ink/70 transition-colors hover:text-accent"
+                >
+                  Postanite partner
                 </Link>
               </li>
             </ul>

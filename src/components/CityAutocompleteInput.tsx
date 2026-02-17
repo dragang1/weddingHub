@@ -120,7 +120,7 @@ export const CityAutocompleteInput = forwardRef<
   );
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0 max-w-full">
       <label htmlFor={id} className="block text-sm font-semibold text-ink">
         {label}
       </label>

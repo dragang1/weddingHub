@@ -9,6 +9,8 @@ import { EVENT_TYPES } from "@/lib/events";
 import type { EventTypeSlug } from "@/lib/events";
 import { normalizeCityForDb, parseCityList } from "@/lib/cities";
 
+const R2_BASE = process.env.NEXT_PUBLIC_R2_PUBLIC_BASE_URL ?? "";
+
 type AdminProviderFormProps = {
   provider: Provider | null;
 };
@@ -17,7 +19,14 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [pendingId] = useState(() =>
+    typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `temp-${Date.now()}`
+  );
+  const providerId = provider?.id ?? pendingId;
 
   const [form, setForm] = useState({
     name: "",
@@ -29,12 +38,16 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
     isActive: true,
     eventTypes: ["wedding"] as EventTypeSlug[],
     description: "",
-    galleryImages: "",
     videoLinks: "",
     phone: "",
     email: "",
     website: "",
     address: "",
+    instagram: "",
+    facebook: "",
+    imageKey: "",
+    coverImageKey: "",
+    galleryImageKeys: [] as string[],
   });
 
   useEffect(() => {
@@ -49,12 +62,16 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         isActive: provider.isActive ?? true,
         eventTypes: (provider.eventTypes ?? ["wedding"]) as EventTypeSlug[],
         description: provider.description,
-        galleryImages: (provider.galleryImages ?? []).join("\n"),
         videoLinks: (provider.videoLinks ?? []).join("\n"),
         phone: provider.phone ?? "",
         email: provider.email ?? "",
         website: provider.website ?? "",
         address: provider.address ?? "",
+        instagram: (provider.details as { instagram?: string })?.instagram ?? "",
+        facebook: (provider.details as { facebook?: string })?.facebook ?? "",
+        imageKey: provider.imageKey ?? "",
+        coverImageKey: provider.coverImageKey ?? "",
+        galleryImageKeys: provider.galleryImageKeys ?? [],
       });
     }
   }, [provider]);
@@ -94,13 +111,20 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
       isActive: form.isActive,
       eventTypes: form.eventTypes,
       description: form.description,
-      galleryImages: form.galleryImages.split("\n").map((s) => s.trim()).filter(Boolean),
       videoLinks: form.videoLinks.split("\n").map((s) => s.trim()).filter(Boolean),
       phone: form.phone || undefined,
       email: form.email || undefined,
       website: form.website || undefined,
       address: form.address || undefined,
+      instagram: form.instagram.trim() || null,
+      facebook: form.facebook.trim() || null,
+      imageKey: form.imageKey || undefined,
+      coverImageKey: form.coverImageKey || null,
+      galleryImageKeys: form.galleryImageKeys,
     };
+    if (!provider && (form.imageKey || form.coverImageKey || form.galleryImageKeys.length > 0)) {
+      (payload as { id?: string }).id = providerId;
+    }
 
     try {
       const url = provider ? `/api/admin/providers/${provider.id}` : "/api/admin/providers";
@@ -173,14 +197,13 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-semibold text-ink">Podkategorija *</label>
+          <label className="mb-1 block text-sm font-semibold text-ink">Podkategorija</label>
           <input
             type="text"
             value={form.subcategory}
             onChange={(e) => setForm((f) => ({ ...f, subcategory: e.target.value }))}
-            required
             className="input-field w-full"
-            placeholder="npr. bend, dj, fotograf"
+            placeholder="opcionalno — npr. bend, dj, fotograf"
           />
         </div>
       </div>
@@ -256,6 +279,62 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         </label>
       </div>
       <div>
+        <label className="mb-1 block text-sm font-semibold text-ink">Naslovna slika (R2)</label>
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+              setError("Slika mora biti manja od 5 MB.");
+              return;
+            }
+            setError("");
+            setUploading(true);
+            try {
+              const fd = new FormData();
+              fd.append("file", file);
+              fd.append("providerId", providerId);
+              const res = await fetch("/api/admin/uploads/provider-cover", {
+                method: "POST",
+                body: fd,
+              });
+              const data = await res.json();
+              if (!res.ok) {
+                setError(data.error ?? "Greška pri uploadu");
+                return;
+              }
+              setForm((f) => ({ ...f, coverImageKey: data.coverImageKey }));
+            } catch {
+              setError("Greška pri uploadu");
+            } finally {
+              setUploading(false);
+              e.target.value = "";
+            }
+          }}
+          className="input-field w-full"
+          disabled={uploading}
+        />
+        {form.coverImageKey && (
+          <div className="mt-2 flex items-center gap-3">
+            <img
+              src={R2_BASE ? `${R2_BASE}/${form.coverImageKey}` : "#"}
+              alt="Pregled naslovnice"
+              className="h-20 w-20 rounded-lg object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, coverImageKey: "" }))}
+              className="text-sm text-red-600 hover:underline"
+            >
+              Ukloni
+            </button>
+          </div>
+        )}
+        <p className="mt-1 text-xs text-muted">JPEG, PNG ili WebP. Max 5 MB.</p>
+      </div>
+      <div>
         <label className="mb-1 block text-sm font-semibold text-ink">Opis *</label>
         <textarea
           value={form.description}
@@ -266,13 +345,76 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-semibold text-ink">Galerija (URL-ovi, jedan po retku)</label>
-        <textarea
-          value={form.galleryImages}
-          onChange={(e) => setForm((f) => ({ ...f, galleryImages: e.target.value }))}
-          rows={3}
+        <label className="mb-1 block text-sm font-semibold text-ink">Galerija (R2 upload)</label>
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          onChange={async (e) => {
+            const files = e.target.files;
+            if (!files?.length) return;
+            const list = Array.from(files);
+            const tooBig = list.find((f) => f.size > 5 * 1024 * 1024);
+            if (tooBig) {
+              setError("Svaka slika mora biti manja od 5 MB.");
+              return;
+            }
+            setError("");
+            setUploading(true);
+            try {
+              const fd = new FormData();
+              fd.append("providerId", providerId);
+              list.forEach((f) => fd.append("files[]", f));
+              const res = await fetch("/api/admin/uploads/provider-gallery", {
+                method: "POST",
+                body: fd,
+              });
+              const data = await res.json();
+              if (!res.ok) {
+                setError(data.error ?? "Greška pri uploadu");
+                return;
+              }
+              setForm((f) => ({
+                ...f,
+                galleryImageKeys: [...f.galleryImageKeys, ...(data.addedKeys ?? [])],
+              }));
+            } catch {
+              setError("Greška pri uploadu");
+            } finally {
+              setUploading(false);
+              e.target.value = "";
+            }
+          }}
           className="input-field w-full"
+          disabled={uploading}
         />
+        {form.galleryImageKeys.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {form.galleryImageKeys.map((key, i) => (
+              <div key={key} className="relative group">
+                <img
+                  src={R2_BASE ? `${R2_BASE}/${key}` : "#"}
+                  alt={`Galerija ${i + 1}`}
+                  className="h-16 w-16 rounded-lg object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm((f) => ({
+                      ...f,
+                      galleryImageKeys: f.galleryImageKeys.filter((k) => k !== key),
+                    }))
+                  }
+                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-600 transition"
+                  title="Ukloni"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <p className="mt-1 text-xs text-muted">JPEG, PNG ili WebP. Max 5 MB po slici.</p>
       </div>
       <div>
         <label className="mb-1 block text-sm font-semibold text-ink">Video linkovi (jedan po retku)</label>
@@ -320,6 +462,28 @@ export function AdminProviderForm({ provider }: AdminProviderFormProps) {
             value={form.website}
             onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))}
             className="input-field w-full"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-ink">Instagram</label>
+          <input
+            type="text"
+            value={form.instagram}
+            onChange={(e) => setForm((f) => ({ ...f, instagram: e.target.value }))}
+            className="input-field w-full"
+            placeholder="npr. @username ili username"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-ink">Facebook</label>
+          <input
+            type="text"
+            value={form.facebook}
+            onChange={(e) => setForm((f) => ({ ...f, facebook: e.target.value }))}
+            className="input-field w-full"
+            placeholder="npr. stranica ili username"
           />
         </div>
       </div>

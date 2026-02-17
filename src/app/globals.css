@@ -42,8 +42,9 @@
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-button border border-border bg-white px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:border-accent/40 hover:bg-accent-soft/40 hover:shadow-soft hover:-translate-y-px active:translate-y-0 active:scale-[0.98] disabled:opacity-50;
   }
+  /* text-base (16px) on mobile prevents iOS Safari auto-zoom; md:text-sm on desktop */
   .input-field {
-    @apply w-full rounded-button border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none;
+    @apply w-full min-w-0 max-w-full rounded-button border border-border bg-white px-4 py-3 text-base text-ink placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none select-text md:text-sm;
   }
   .card {
     @apply rounded-card border border-border bg-white shadow-card transition-all duration-300;
@@ -66,4 +67,12 @@
   .divider-ornament {
     @apply mx-auto my-6 h-px w-16 bg-gradient-to-r from-transparent via-accent/40 to-transparent;
   }
+}
+
+/* Outside @layer: override any ancestor user-select (Chrome bug when parent has select-none) */
+input,
+textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
 }

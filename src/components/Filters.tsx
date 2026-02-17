@@ -64,7 +64,7 @@ export function Filters({
   const subcategory = searchParams.get("subcategory") ?? "";
 
   return (
-    <aside className="card p-5">
+    <aside className="card min-w-0 max-w-full p-5">
       <h3 className="section-label mb-5">Filteri</h3>
       <div className="space-y-5">
         <div>

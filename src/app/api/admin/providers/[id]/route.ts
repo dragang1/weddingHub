@@ -15,7 +15,7 @@ const eventTypesSchema = z
 const updateProviderSchema = z.object({
   name: z.string().min(1).optional(),
   category: z.string().optional(),
-  subcategory: z.string().min(1).optional(),
+  subcategory: z.string().optional(),
   locationCity: z.string().optional(),
   serviceCities: z.union([z.array(z.string()), z.string()]).optional(),
   isNationwide: z.boolean().optional(),
@@ -27,6 +27,11 @@ const updateProviderSchema = z.object({
   email: z.string().nullable().optional(),
   website: z.string().nullable().optional(),
   address: z.string().nullable().optional(),
+  imageKey: z.string().nullable().optional(),
+  coverImageKey: z.string().nullable().optional(),
+  galleryImageKeys: z.array(z.string()).optional(),
+  instagram: z.string().nullable().optional(),
+  facebook: z.string().nullable().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -98,25 +103,44 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
   }
 
+  const updateData: Record<string, unknown> = {
+    ...(data.name != null && { name: data.name }),
+    ...(categorySlug != null && { category: categorySlug }),
+    ...(data.subcategory !== undefined && { subcategory: (data.subcategory ?? "").trim() }),
+    ...(locationCity != null && { locationCity }),
+    ...(serviceCities != null && { serviceCities }),
+    ...(data.isNationwide !== undefined && { isNationwide: data.isNationwide }),
+    ...(data.eventTypes != null && data.eventTypes.length > 0 && { eventTypes: data.eventTypes }),
+    ...(data.description != null && { description: data.description }),
+    ...(data.galleryImages != null && { galleryImages: data.galleryImages }),
+    ...(data.videoLinks != null && { videoLinks: data.videoLinks }),
+    ...(data.phone !== undefined && { phone: data.phone }),
+    ...(data.email !== undefined && { email: data.email }),
+    ...(data.website !== undefined && { website: data.website }),
+    ...(data.address !== undefined && { address: data.address }),
+    ...(data.imageKey !== undefined && { imageKey: data.imageKey }),
+    ...(data.coverImageKey !== undefined && { coverImageKey: data.coverImageKey }),
+    ...(data.galleryImageKeys !== undefined && { galleryImageKeys: data.galleryImageKeys }),
+    ...(data.isActive !== undefined && { isActive: data.isActive }),
+  };
+
+  if (data.instagram !== undefined || data.facebook !== undefined) {
+    const existing = await prisma.provider.findUnique({
+      where: { id },
+      select: { details: true },
+    });
+    const current = (existing?.details as Record<string, unknown>) ?? {};
+    const merged = {
+      ...current,
+      instagram: data.instagram !== undefined ? (data.instagram?.trim() || null) : current.instagram,
+      facebook: data.facebook !== undefined ? (data.facebook?.trim() || null) : current.facebook,
+    };
+    updateData.details = merged;
+  }
+
   const provider = await prisma.provider.update({
     where: { id },
-    data: {
-      ...(data.name != null && { name: data.name }),
-      ...(categorySlug != null && { category: categorySlug }),
-      ...(data.subcategory != null && { subcategory: data.subcategory }),
-      ...(locationCity != null && { locationCity }),
-      ...(serviceCities != null && { serviceCities }),
-      ...(data.isNationwide !== undefined && { isNationwide: data.isNationwide }),
-      ...(data.eventTypes != null && data.eventTypes.length > 0 && { eventTypes: data.eventTypes }),
-      ...(data.description != null && { description: data.description }),
-      ...(data.galleryImages != null && { galleryImages: data.galleryImages }),
-      ...(data.videoLinks != null && { videoLinks: data.videoLinks }),
-      ...(data.phone !== undefined && { phone: data.phone }),
-      ...(data.email !== undefined && { email: data.email }),
-      ...(data.website !== undefined && { website: data.website }),
-      ...(data.address !== undefined && { address: data.address }),
-      ...(data.isActive !== undefined && { isActive: data.isActive }),
-    },
+    data: updateData as Parameters<typeof prisma.provider.update>[0]["data"],
   });
   return Response.json(provider);
 }

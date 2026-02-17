@@ -4,8 +4,8 @@ import { cityWhereClause } from "@/lib/providers";
 import {
   categoryLabel,
   CATEGORIES,
-  CATEGORY_ICONS,
 } from "@/lib/categories";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import {
   prettyCityFromSlug,
   cityInputToCanonicalSlug,
@@ -141,8 +141,8 @@ export async function CategoryCityResults({
                   }
                   className="flex shrink-0 snap-start items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm text-muted shadow-soft transition-all duration-200 hover:border-accent/40 hover:text-ink hover:shadow-soft-lg focus:outline-none focus:ring-2 focus:ring-accent/20"
                 >
-                  <span className="text-base" aria-hidden>
-                    {CATEGORY_ICONS[cat.slug] ?? "📌"}
+                  <span className="text-ink/70" aria-hidden>
+                    <CategoryIcon slug={cat.slug} className="h-4 w-4" strokeWidth={1.75} />
                   </span>
                   <span>{cat.label}</span>
                 </Link>
@@ -228,9 +228,9 @@ export async function CategoryCityResults({
                       locationCity: p.locationCity,
                       serviceCities: p.serviceCities ?? [],
                       isNationwide: p.isNationwide,
-                      galleryImages: p.galleryImages ?? [],
-                      coverImageUrl: p.coverImageUrl ?? undefined,
-                      coverImageAttribution: p.coverImageAttribution ?? undefined,
+                      imageKey: p.imageKey ?? undefined,
+                      coverImageKey: p.coverImageKey ?? undefined,
+                      galleryImageKeys: p.galleryImageKeys ?? undefined,
                       eventTypes: p.eventTypes ?? [],
                     }}
                     selectedCity={cityDisplay}

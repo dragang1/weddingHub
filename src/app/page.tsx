@@ -1,26 +1,20 @@
 "use client";
 
-import { useRef, useCallback } from "react";
-import Link from "next/link";
+import { useState, useRef, useCallback } from "react";
 import { CATEGORIES } from "@/lib/categories";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { HomeCityStep } from "./HomeCityStep";
+import { CategoryCard } from "@/components/CategoryCard";
 
 export const dynamic = "force-dynamic";
 
-type CategoryPayload = { slug: string; label: string; path: string };
-
 export default function Home() {
   const categorySectionRef = useRef<HTMLDivElement>(null);
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false);
 
   const scrollToCategories = useCallback(() => {
     categorySectionRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
-
-  function handleCategoryClick(payload: CategoryPayload) {
-    window.location.href = `/kategorija/${payload.slug}`;
-  }
 
   return (
     <main className="min-h-screen flex flex-col bg-surface">
@@ -28,118 +22,70 @@ export default function Home() {
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        {/* Decorative background elements */}
+        {/* Decorative background — reduced blur on mobile for performance */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-accent/[0.04] blur-3xl" />
-          <div className="absolute top-1/2 -left-48 h-80 w-80 rounded-full bg-rose/[0.06] blur-3xl" />
+          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-accent/[0.05] blur-2xl sm:h-96 sm:w-96 sm:blur-3xl" />
+          <div className="absolute top-1/2 -left-32 h-56 w-56 rounded-full bg-rose/[0.05] blur-2xl sm:-left-48 sm:h-80 sm:w-80 sm:blur-3xl" />
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px w-2/3 bg-gradient-to-r from-transparent via-border to-transparent" />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28 lg:py-36">
+        <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-14 md:py-20 lg:py-28">
           <div className="max-w-2xl">
             {/* Pill badge */}
-            <p className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent-soft/50 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-accent">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            <p className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent-soft/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.15em]">
+              <span className="h-1 w-1 rounded-full bg-accent sm:h-1.5 sm:w-1.5" />
               Vaš vodič kroz savršen dan
             </p>
 
-            <h1 className="mt-6 font-serif text-4xl font-bold leading-[1.1] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+            <h1 className="mt-3 font-serif text-3xl font-bold leading-[1.15] tracking-tight text-ink sm:mt-5 sm:text-4xl sm:leading-[1.1] md:text-5xl lg:text-6xl">
               Sve za vaše vjenčanje —{" "}
               <span className="text-accent">na jednom mjestu.</span>
             </h1>
 
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted sm:text-lg">
+            <p className="mt-3 text-[15px] leading-relaxed text-muted sm:mt-4 sm:text-base md:max-w-lg md:text-lg">
               Odaberite uslugu i grad događaja. Pronađite provjerene ponuđače i
               kontaktirajte ih direktno.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+            {/* Primary CTA */}
+            <div className="mt-6 sm:mt-8">
               <button
                 type="button"
                 onClick={scrollToCategories}
-                className="btn-primary rounded-full px-8 py-3.5 text-base shadow-glow"
+                className="btn-primary w-full rounded-full px-6 py-3.5 text-base shadow-glow sm:w-auto sm:px-8"
               >
                 Pronađite usluge
               </button>
-              <Link
-                href="#kako-funkcionise"
-                className="group inline-flex items-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold text-muted transition-colors hover:text-ink"
-              >
-                Kako funkcioniše
-                <svg
-                  className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </Link>
             </div>
           </div>
 
-          {/* Trust indicators */}
-          <div className="mt-16 flex flex-wrap items-center gap-6 text-sm text-muted">
-            <span className="flex items-center gap-2">
-              <svg
-                className="h-4 w-4 text-accent"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              Provjereni ponuđači
-            </span>
-            <span className="hidden h-4 w-px bg-border sm:block" />
-            <span className="flex items-center gap-2">
-              <svg
-                className="h-4 w-4 text-accent"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              Više gradova
-            </span>
-            <span className="hidden h-4 w-px bg-border sm:block" />
-            <span className="flex items-center gap-2">
-              <svg
-                className="h-4 w-4 text-accent"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-              Brzo slanje upita
-            </span>
+          {/* Trust — subtle cards */}
+          <div className="mt-8 grid grid-cols-1 gap-2.5 sm:mt-10 sm:grid-cols-3 sm:gap-3">
+            <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-white/60 px-4 py-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/60 text-accent">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </span>
+              <span className="text-sm text-muted">Provjereni ponuđači</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-white/60 px-4 py-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/60 text-accent">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </span>
+              <span className="text-sm text-muted">Više gradova</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-white/60 px-4 py-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/60 text-accent">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </span>
+              <span className="text-sm text-muted">Brzo slanje upita</span>
+            </div>
           </div>
         </div>
       </section>
@@ -147,18 +93,35 @@ export default function Home() {
       {/* ── How it works ───────────────────────────────────────── */}
       <section
         id="kako-funkcionise"
-        className="relative border-y border-border bg-white/60 py-16 sm:py-20"
+        className="relative border-t border-border/60 bg-accent-soft/25"
       >
-        <div className="mx-auto max-w-6xl px-5 sm:px-8">
-          <div className="text-center">
-            <p className="section-label text-accent">Kako funkcioniše</p>
-            <h2 className="mt-3 font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
+          <button
+            type="button"
+            onClick={() => setHowItWorksOpen((o) => !o)}
+            className="flex w-full flex-col items-center py-4 text-center group"
+            aria-expanded={howItWorksOpen}
+          >
+            <p className="section-label text-accent/90">Kako funkcioniše</p>
+            <h2 className="mt-2 font-serif text-lg font-bold tracking-tight text-ink sm:text-xl">
               Tri jednostavna koraka
             </h2>
-            <div className="divider-ornament" />
-          </div>
+            <span className="mt-4 flex items-center gap-2 text-sm font-medium text-muted group-hover:text-ink transition-colors">
+              {howItWorksOpen ? "Zatvori" : "Klikni za detalje"}
+              <svg
+                className={`h-5 w-5 transition-transform ${howItWorksOpen ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </button>
 
-          <div className="mt-12 grid gap-8 sm:grid-cols-3 sm:gap-6 lg:gap-12">
+          {howItWorksOpen && (
+          <div className="grid gap-6 pt-4 sm:grid-cols-3 sm:gap-6 lg:gap-8">
             {[
               {
                 num: "01",
@@ -228,7 +191,7 @@ export default function Home() {
             ].map((step) => (
               <div
                 key={step.num}
-                className="group relative rounded-2xl border border-border/60 bg-white p-8 text-center transition-all duration-300 hover:border-accent/20 hover:shadow-soft-lg"
+                className="group relative rounded-xl border border-border/40 bg-white p-6 text-center transition-all duration-200 hover:border-accent/20 hover:shadow-soft sm:p-6"
               >
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-colors duration-300 group-hover:bg-accent group-hover:text-white">
                   {step.icon}
@@ -245,36 +208,37 @@ export default function Home() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </section>
 
-      {/* ── Categories ─────────────────────────────────────────── */}
+      {/* ── Popularne kategorije ───────────────────────────────── */}
       <section
         ref={categorySectionRef}
         id="kategorije"
-        className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-24"
+        className="relative border-t border-accent/20 bg-[#F7F4EF] py-20"
       >
-        <div className="text-center">
-          <p className="section-label text-accent">Kategorije</p>
-          <h2 className="mt-3 font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Odaberite uslugu koja vam je potrebna
-          </h2>
-          <p className="mt-3 text-sm text-muted">
-            Kliknite kategoriju i nastavite odabirom grada.
-          </p>
-          <div className="divider-ornament" />
-        </div>
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {CATEGORIES.map((cat) => (
-            <HomeCityStep
-              key={cat.slug}
-              slug={cat.slug}
-              label={cat.label}
-              path={cat.path}
-              description={cat.description}
-              onSelect={handleCategoryClick}
-            />
-          ))}
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="text-center">
+            <p className="section-label text-accent">Popularne kategorije</p>
+            <h2 className="mt-3 font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+              Odaberite uslugu koja vam je potrebna
+            </h2>
+            <p className="mt-3 text-sm text-ink/70">
+              Kliknite kategoriju i nastavite odabirom grada.
+            </p>
+            <div className="divider-ornament" />
+          </div>
+          <div className="mt-16 grid grid-cols-2 gap-6 md:grid-cols-3 md:gap-8 [&>a:last-child]:col-span-2 [&>a:last-child]:md:col-span-1 [&>a:last-child]:md:col-start-2">
+            {CATEGORIES.map((cat) => (
+              <CategoryCard
+                key={cat.slug}
+                slug={cat.slug}
+                label={cat.label}
+                description={cat.description}
+              />
+            ))}
+          </div>
         </div>
       </section>
 

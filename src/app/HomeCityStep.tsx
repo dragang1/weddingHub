@@ -1,6 +1,6 @@
 "use client";
 
-import { CATEGORY_ICONS } from "@/lib/categories";
+import { CategoryIcon } from "@/components/CategoryIcon";
 
 type HomeCityStepProps = {
   slug: string;
@@ -32,10 +32,10 @@ export function HomeCityStep({
       aria-pressed={isSelected}
     >
       <span
-        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/10 group-hover:shadow-glow"
+        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-ink/80 transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/10 group-hover:shadow-glow"
         aria-hidden
       >
-        {CATEGORY_ICONS[slug] ?? "📌"}
+        <CategoryIcon slug={slug} className="h-6 w-6" strokeWidth={1.75} />
       </span>
       <span className="mt-4 font-serif text-lg font-bold text-ink">
         {label}

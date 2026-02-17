@@ -5,8 +5,8 @@ import {
   categoryLabel,
   categoryPath,
   categoryDescription,
-  CATEGORY_ICONS,
 } from "@/lib/categories";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import { cityInputToCanonicalSlug } from "@/lib/cities";
 import { parseEventType, eventHeadingPrefix } from "@/lib/events";
 import type { CategorySlug } from "@/lib/categories";
@@ -50,7 +50,6 @@ export default async function CategoryPage({
 
   const categoryTitle = categoryLabel(slug as CategorySlug);
   const description = categoryDescription(slug as CategorySlug);
-  const icon = CATEGORY_ICONS[slug] ?? "📌";
   const headingPrefix = eventHeadingPrefix(eventType);
 
   return (
@@ -83,8 +82,8 @@ export default async function CategoryPage({
             {/* Category confirmation card */}
             <div className="card p-4 sm:p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-xl">
-                  {icon}
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-ink/80">
+                  <CategoryIcon slug={slug} className="h-6 w-6" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0">
                   <p className="section-label text-accent">Odabrali ste</p>

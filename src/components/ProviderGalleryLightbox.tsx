@@ -1,0 +1,171 @@
+"use client";
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
+
+type ProviderGalleryLightboxProps = {
+  images: string[];
+  initialIndex?: number;
+};
+
+export function ProviderGalleryLightbox({
+  images,
+  initialIndex = 0,
+}: ProviderGalleryLightboxProps) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(
+    Math.max(0, Math.min(initialIndex, images.length - 1))
+  );
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const goPrev = useCallback(() => {
+    setActiveIndex((i) => (i <= 0 ? images.length - 1 : i - 1));
+  }, [images.length]);
+
+  const goNext = useCallback(() => {
+    setActiveIndex((i) => (i >= images.length - 1 ? 0 : i + 1));
+  }, [images.length]);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!open) return;
+      switch (e.key) {
+        case "Escape":
+          setOpen(false);
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          goPrev();
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          goNext();
+          break;
+      }
+    },
+    [open, goPrev, goNext]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  if (images.length === 0) return null;
+
+  const currentUrl = images[activeIndex];
+
+  return (
+    <>
+      {/* Thumbnail grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {images.map((url, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => {
+              setActiveIndex(i);
+              setOpen(true);
+            }}
+            className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+            aria-label={`Pogledaj sliku ${i + 1} od ${images.length}`}
+          >
+            <Image
+              src={url}
+              alt={`Galerija ${i + 1}`}
+              fill
+              className="object-cover transition-transform duration-300 hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
+          </button>
+        ))}
+      </div>
+
+      {/* Lightbox modal */}
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Galerija slika"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOpen(false);
+          }}
+        >
+          {/* Close button */}
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={() => setOpen(false)}
+            className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+            aria-label="Zatvori"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Prev */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goPrev();
+            }}
+            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white sm:left-4"
+            aria-label="Prethodna slika"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Next */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goNext();
+            }}
+            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white sm:right-4"
+            aria-label="Sljedeća slika"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Image - img for dynamic dimensions in lightbox */}
+          <div
+            className="relative max-w-5xl w-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={currentUrl}
+              alt={`Slika ${activeIndex + 1} od ${images.length}`}
+              className="max-h-[80vh] w-auto max-w-full object-contain"
+            />
+          </div>
+
+          {/* Counter */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-4 py-2 text-sm font-medium text-white">
+            {activeIndex + 1} / {images.length}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

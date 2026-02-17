@@ -1,7 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { eventLabel } from "@/lib/events";
+import { getProviderImageUrl } from "@/lib/providerImage";
 import type { EventTypeSlug } from "@/lib/events";
+
+const PLACEHOLDER_IMAGE = "/images/placeholders/default.svg";
 
 export type ProviderCardProvider = {
   id: string;
@@ -9,9 +12,9 @@ export type ProviderCardProvider = {
   locationCity: string;
   serviceCities: string[];
   isNationwide: boolean;
-  galleryImages: string[];
-  coverImageUrl?: string | null;
-  coverImageAttribution?: string | null;
+  imageKey?: string | null;
+  coverImageKey?: string | null;
+  galleryImageKeys?: string[];
   eventTypes?: string[];
 };
 
@@ -37,7 +40,11 @@ export function ProviderCard({
   selectedCity,
   eventType = "wedding",
 }: ProviderCardProps) {
-  const thumb = provider.coverImageUrl ?? provider.galleryImages?.[0];
+  const thumb =
+    getProviderImageUrl(provider.coverImageKey) ??
+    getProviderImageUrl(provider.imageKey) ??
+    getProviderImageUrl(provider.galleryImageKeys?.[0]) ??
+    PLACEHOLDER_IMAGE;
   const servesThisCity =
     selectedCity && providerServesCity(provider, selectedCity);
   const showRadiUBadge =
@@ -69,32 +76,13 @@ export function ProviderCard({
       <Link href={`/profil/${provider.id}`} className="block">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-accent-soft/20">
-          {thumb && (thumb.startsWith("http") || thumb.startsWith("/")) ? (
-            <Image
-              src={thumb}
-              alt=""
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized={thumb.startsWith("/api/")}
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-muted/40">
-              <svg
-                className="h-10 w-10"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a2.25 2.25 0 002.25-2.25V5.25a2.25 2.25 0 00-2.25-2.25H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
-                />
-              </svg>
-            </div>
-          )}
+          <Image
+            src={thumb}
+            alt=""
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
           {/* Subtle hover gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>

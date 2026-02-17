@@ -4,12 +4,14 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { Gallery } from "@/components/Gallery";
+import { ProviderGalleryLightbox } from "@/components/ProviderGalleryLightbox";
 import { LeadForm } from "@/components/LeadForm";
 import { ProfileContactCard } from "@/components/ProfileContactCard";
 import { ProviderCard } from "@/components/ProviderCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { categoryPath, categoryLabel } from "@/lib/categories";
+import { getProviderImageUrl, getProviderImageUrls } from "@/lib/providerImage";
 import { slugifyCity } from "@/lib/cities";
 import { eventLabel } from "@/lib/events";
 import type { EventTypeSlug } from "@/lib/events";
@@ -146,41 +148,37 @@ export default async function ProfilePage({ params }: PageProps) {
       locationCity: true,
       serviceCities: true,
       isNationwide: true,
-      galleryImages: true,
-      coverImageUrl: true,
-      coverImageAttribution: true,
+      galleryImageKeys: true,
       eventTypes: true,
+      imageKey: true,
+      coverImageKey: true,
     },
   });
 
   const backPath = categoryPath(provider.category as CategorySlug);
   const backUrl = `${backPath}/${slugifyCity(provider.locationCity)}`;
   const categoryTitle = categoryLabel(provider.category as CategorySlug);
-  const heroImage = provider.coverImageUrl ?? provider.galleryImages?.[0];
-  const hasHero =
-    heroImage &&
-    (heroImage.startsWith("http") || heroImage.startsWith("/"));
+  const heroImage =
+    getProviderImageUrl(provider.coverImageKey) ??
+    getProviderImageUrl(provider.imageKey) ??
+    getProviderImageUrl(provider.galleryImageKeys?.[0]) ??
+    "/images/placeholders/default.svg";
 
   return (
     <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-surface">
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero */}
-        <section className="relative h-[200px] sm:h-[260px] md:h-[320px]">
-          {hasHero ? (
-            <Image
-              src={heroImage}
-              alt=""
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
-              unoptimized={heroImage.startsWith("/api/")}
-            />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-accent-soft/40 to-rose-soft/50" />
-          )}
+        {/* Hero cover banner */}
+        <section className="relative w-full overflow-hidden rounded-b-2xl h-56 sm:h-72 lg:h-80 bg-muted">
+          <Image
+            src={heroImage}
+            alt=""
+            fill
+            className="object-cover object-[center_35%]"
+            priority
+            sizes="100vw"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-6 md:p-8">
             <Link
@@ -196,34 +194,6 @@ export default async function ProfilePage({ params }: PageProps) {
               <h1 className="font-serif text-2xl font-bold tracking-tight text-white drop-shadow-lg sm:text-3xl md:text-4xl">
                 {provider.name}
               </h1>
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-white/90 sm:text-base">
-                {provider.address ? (
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(provider.address)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-2 hover:text-white transition-colors"
-                  >
-                    {provider.address}
-                  </a>
-                ) : (
-                  <span>{provider.locationCity}</span>
-                )}
-                <span className="text-white/50">·</span>
-                <span>{provider.subcategory}</span>
-                {provider.category !== "wedding_salon" && provider.category !== "beauty" && (
-                  <>
-                    <span className="text-white/50">·</span>
-                    <span>
-                      {provider.isNationwide
-                        ? "Cijela BiH"
-                        : provider.serviceCities?.length
-                          ? provider.serviceCities.slice(0, 3).join(", ") + (provider.serviceCities.length > 3 ? "…" : "")
-                          : provider.locationCity}
-                    </span>
-                  </>
-                )}
-              </p>
               <a
                 href="#upit"
                 className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink shadow-soft transition hover:bg-white/95 hover:shadow-soft-lg"
@@ -263,7 +233,7 @@ export default async function ProfilePage({ params }: PageProps) {
               <span className="rounded-md bg-accent-soft/60 px-2 py-0.5 text-xs font-medium text-accent-hover">
                 {categoryTitle}
               </span>
-              <span>{provider.subcategory}</span>
+              {provider.subcategory && <span>{provider.subcategory}</span>}
             </div>
             {(provider.eventTypes ?? []).length > 0 && (
               <>
@@ -296,19 +266,35 @@ export default async function ProfilePage({ params }: PageProps) {
                   email={provider.email}
                   website={provider.website}
                   address={provider.address}
+                  instagram={(provider.details as { instagram?: string })?.instagram}
+                  facebook={(provider.details as { facebook?: string })?.facebook}
                 />
               </div>
 
               {/* Gallery */}
-              <section aria-labelledby="galerija-heading">
-                <h2 id="galerija-heading" className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted mb-4">
-                  Galerija
-                </h2>
-                <Gallery
-                  galleryImages={provider.galleryImages ?? []}
-                  videoLinks={provider.videoLinks ?? []}
-                />
-              </section>
+              {(() => {
+                const galleryKeys = provider.galleryImageKeys ?? [];
+                const galleryUrls = getProviderImageUrls(galleryKeys);
+                const videoLinks = provider.videoLinks ?? [];
+                const hasImages = galleryUrls.length > 0;
+                const hasVideos = videoLinks.length > 0;
+                if (!hasImages && !hasVideos) return null;
+                return (
+                  <section aria-labelledby="galerija-heading">
+                    <h2 id="galerija-heading" className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted mb-4">
+                      Galerija
+                    </h2>
+                    <div className="space-y-4">
+                      {hasImages && (
+                        <ProviderGalleryLightbox images={galleryUrls} />
+                      )}
+                      {hasVideos && (
+                        <Gallery galleryImages={[]} videoLinks={videoLinks} />
+                      )}
+                    </div>
+                  </section>
+                );
+              })()}
 
               {/* Key details (wedding salons) */}
               {provider.category === "wedding_salon" &&
@@ -363,9 +349,9 @@ export default async function ProfilePage({ params }: PageProps) {
                           locationCity: p.locationCity,
                           serviceCities: p.serviceCities ?? [],
                           isNationwide: p.isNationwide,
-                          galleryImages: p.galleryImages ?? [],
-                          coverImageUrl: p.coverImageUrl ?? undefined,
-                          coverImageAttribution: p.coverImageAttribution ?? undefined,
+                          imageKey: p.imageKey ?? undefined,
+                          coverImageKey: p.coverImageKey ?? undefined,
+                          galleryImageKeys: p.galleryImageKeys ?? undefined,
                           eventTypes: p.eventTypes ?? [],
                         }}
                       />
@@ -382,6 +368,8 @@ export default async function ProfilePage({ params }: PageProps) {
                 email={provider.email}
                 website={provider.website}
                 address={provider.address}
+                instagram={(provider.details as { instagram?: string })?.instagram}
+                facebook={(provider.details as { facebook?: string })?.facebook}
               />
             </aside>
           </div>

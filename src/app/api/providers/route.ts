@@ -67,10 +67,10 @@ export async function GET(request: NextRequest) {
       isNationwide: true,
       eventTypes: true,
       description: true,
-      galleryImages: true,
       videoLinks: true,
-      coverImageUrl: true,
-      coverImageAttribution: true,
+      imageKey: true,
+      coverImageKey: true,
+      galleryImageKeys: true,
       createdAt: true,
     },
   });

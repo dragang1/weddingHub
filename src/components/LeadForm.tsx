@@ -1,6 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const COOLDOWN_SEC = 60;
+
+function getCooldownKey(providerId: string) {
+  return `lead_cooldown_${providerId}`;
+}
+
+function getRemainingCooldown(providerId: string): number {
+  if (typeof window === "undefined") return 0;
+  const raw = localStorage.getItem(getCooldownKey(providerId));
+  if (!raw) return 0;
+  const ts = parseInt(raw, 10);
+  if (Number.isNaN(ts)) return 0;
+  const elapsed = Math.floor((Date.now() - ts) / 1000);
+  const remaining = COOLDOWN_SEC - elapsed;
+  return remaining > 0 ? remaining : 0;
+}
 
 type LeadFormProps = {
   providerId: string;
@@ -8,73 +25,91 @@ type LeadFormProps = {
 };
 
 export function LeadForm({ providerId, providerName }: LeadFormProps) {
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "cooldown">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [cooldownSec, setCooldownSec] = useState(0);
+
+  useEffect(() => {
+    const rem = getRemainingCooldown(providerId);
+    if (rem > 0) {
+      setStatus("cooldown");
+      setCooldownSec(rem);
+    }
+  }, [providerId]);
+
+  useEffect(() => {
+    if (status !== "cooldown" || cooldownSec <= 0) return;
+    const t = setInterval(() => {
+      const rem = getRemainingCooldown(providerId);
+      if (rem <= 0) {
+        setStatus("idle");
+        setCooldownSec(0);
+        return;
+      }
+      setCooldownSec(rem);
+    }, 1000);
+    return () => clearInterval(t);
+  }, [status, cooldownSec, providerId]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const data = new FormData(form);
-    const body = {
-      providerId,
-      customerName: data.get("customerName") as string,
-      customerPhone: data.get("customerPhone") as string,
-      customerEmail: (data.get("customerEmail") as string) || undefined,
-      eventDate: data.get("eventDate") as string,
-      eventCity: data.get("eventCity") as string,
-      budget: data.get("budget") ? Number(data.get("budget")) : undefined,
-      message: data.get("message") as string,
-      company: data.get("company") as string,
-    };
+    const name = (form.querySelector('[name="name"]') as HTMLInputElement)?.value?.trim();
+    const email = (form.querySelector('[name="email"]') as HTMLInputElement)?.value?.trim();
+    const phone = (form.querySelector('[name="phone"]') as HTMLInputElement)?.value?.trim();
+    const message = (form.querySelector('[name="message"]') as HTMLTextAreaElement)?.value?.trim();
+
+    if (!name || !message || message.length < 20) {
+      setErrorMsg("Ime i poruka (min. 20 znakova) su obavezni.");
+      return;
+    }
 
     setStatus("loading");
     setErrorMsg("");
+
+    const payload = {
+      providerId,
+      providerName,
+      pageUrl: typeof window !== "undefined" ? window.location.href : undefined,
+      name,
+      email: email || undefined,
+      phone: phone ? phone.trim() : undefined,
+      message,
+    };
+
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(payload),
       });
       const json = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        setStatus("error");
-        setErrorMsg(json.error ?? `Greška ${res.status}`);
+        setStatus("idle");
+        setErrorMsg(json.error ?? "Greška");
         return;
       }
-      setStatus("success");
+
       form.reset();
+      if (typeof window !== "undefined") {
+        localStorage.setItem(getCooldownKey(providerId), String(Date.now()));
+      }
+      setStatus("cooldown");
+      setCooldownSec(COOLDOWN_SEC);
     } catch {
-      setStatus("error");
-      setErrorMsg("Greška u mreži. Pokušajte ponovno.");
+      setStatus("idle");
+      setErrorMsg("Greška u mreži. Pokušaj ponovo.");
     }
   }
 
-  if (status === "success") {
+  if (status === "cooldown" && cooldownSec > 0) {
     return (
-      <div className="card overflow-hidden">
+      <div className="rounded-2xl border border-border bg-white shadow-card overflow-hidden">
         <div className="bg-accent-soft/50 p-8 text-center sm:p-10">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-            <svg
-              className="h-8 w-8 text-accent"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <p className="mt-4 font-serif text-xl font-bold text-ink">
-            Hvala vam!
-          </p>
+          <p className="font-medium text-ink">Hvala! Upit je poslan.</p>
           <p className="mt-2 text-sm text-muted">
-            Vaš upit je uspješno poslan. Javit ćemo vam se uskoro.
+            Možeš poslati novi upit za {cooldownSec} sekundi.
           </p>
         </div>
       </div>
@@ -82,167 +117,82 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card overflow-hidden">
-      {/* Form header */}
+    <form onSubmit={handleSubmit} className="min-w-0 rounded-2xl border border-border bg-white shadow-card overflow-hidden">
       <div className="bg-accent-soft/30 px-6 py-5 sm:px-8">
         <h3 className="font-serif text-xl font-bold text-ink">Pošalji upit</h3>
-        <p className="mt-1 text-sm text-muted">
-          Kontaktirajte {providerName} direktno.
-        </p>
+        <p className="mt-1 text-sm text-muted">Kontaktirajte {providerName}.</p>
       </div>
 
-      {/* Honeypot */}
-      <div className="absolute -left-[9999px] top-0" aria-hidden="true">
-        <label htmlFor="company">Ne ispunjavajte</label>
-        <input
-          type="text"
-          id="company"
-          name="company"
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="space-y-8 p-6 sm:p-8">
-        {/* Your details */}
-        <fieldset>
-          <legend className="section-label mb-4">Vaši podaci</legend>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="sm:col-span-2 sm:max-w-xs">
-              <label
-                htmlFor="customerName"
-                className="mb-1.5 block text-xs font-semibold text-muted"
-              >
-                Ime i prezime *
-              </label>
-              <input
-                id="customerName"
-                name="customerName"
-                type="text"
-                required
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="customerPhone"
-                className="mb-1.5 block text-xs font-semibold text-muted"
-              >
-                Telefon *
-              </label>
-              <input
-                id="customerPhone"
-                name="customerPhone"
-                type="tel"
-                required
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="customerEmail"
-                className="mb-1.5 block text-xs font-semibold text-muted"
-              >
-                Email
-              </label>
-              <input
-                id="customerEmail"
-                name="customerEmail"
-                type="email"
-                className="input-field"
-              />
-            </div>
-          </div>
-        </fieldset>
-
-        {/* Event */}
-        <fieldset className="border-t border-border pt-8">
-          <legend className="section-label mb-4">Događaj</legend>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="eventDate"
-                className="mb-1.5 block text-xs font-semibold text-muted"
-              >
-                Datum događaja *
-              </label>
-              <input
-                id="eventDate"
-                name="eventDate"
-                type="date"
-                required
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="eventCity"
-                className="mb-1.5 block text-xs font-semibold text-muted"
-              >
-                Mjesto događaja *
-              </label>
-              <input
-                id="eventCity"
-                name="eventCity"
-                type="text"
-                required
-                className="input-field"
-                placeholder="npr. Sarajevo"
-              />
-            </div>
-            <div className="sm:col-span-2 sm:max-w-xs">
-              <label
-                htmlFor="budget"
-                className="mb-1.5 block text-xs font-semibold text-muted"
-              >
-                Budžet (€)
-              </label>
-              <input
-                id="budget"
-                name="budget"
-                type="number"
-                min={0}
-                className="input-field"
-                placeholder="opcionalno"
-              />
-            </div>
-          </div>
-        </fieldset>
-
-        {/* Message */}
-        <fieldset className="border-t border-border pt-8">
-          <legend className="mb-1.5 text-xs font-semibold text-muted">
-            Poruka *
-          </legend>
+      <div className="min-w-0 space-y-4 p-6 sm:p-8">
+        <div>
+          <label htmlFor="lead-name" className="mb-1.5 block text-xs font-semibold text-muted">
+            Ime i prezime *
+          </label>
+          <input
+            id="lead-name"
+            name="name"
+            type="text"
+            required
+            className="input-field w-full"
+            placeholder="npr. Ana Horvat"
+          />
+        </div>
+        <div>
+          <label htmlFor="lead-email" className="mb-1.5 block text-xs font-semibold text-muted">
+            Email
+          </label>
+          <input
+            id="lead-email"
+            name="email"
+            type="email"
+            className="input-field w-full"
+            placeholder="opcionalno"
+          />
+        </div>
+        <div>
+          <label htmlFor="lead-phone" className="mb-1.5 block text-xs font-semibold text-muted">
+            Telefon
+          </label>
+          <input
+            id="lead-phone"
+            name="phone"
+            type="tel"
+            className="input-field w-full"
+            placeholder="opcionalno"
+          />
+        </div>
+        <div>
+          <label htmlFor="lead-message" className="mb-1.5 block text-xs font-semibold text-muted">
+            Poruka * (min. 20 znakova)
+          </label>
           <textarea
-            id="message"
+            id="lead-message"
             name="message"
             rows={4}
             required
-            className="input-field resize-y"
+            minLength={20}
+            className="input-field w-full resize-y"
             placeholder="Opišite šta vam treba..."
           />
-        </fieldset>
+        </div>
       </div>
 
-      {/* Error */}
       {errorMsg && (
-        <div className="mx-6 mb-4 rounded-button border border-red-200 bg-red-50 px-4 py-3 sm:mx-8">
+        <div className="mx-6 mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 sm:mx-8">
           <p className="text-sm text-red-700" role="alert">
             {errorMsg}
           </p>
         </div>
       )}
 
-      {/* Submit */}
       <div className="border-t border-border px-6 py-5 sm:px-8">
         <button
           type="submit"
           disabled={status === "loading"}
-          className="btn-primary"
+          className="btn-primary w-full sm:w-auto"
         >
           {status === "loading" ? (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center justify-center gap-2">
               <svg
                 className="h-4 w-4 animate-spin"
                 fill="none"
