@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --bg: #FAFAF8;
-  --fg: #1C1917;
-  --muted: #78716C;
-  --border: #E7E5E4;
-  --accent: #A0845C;
-  --accent-hover: #86703F;
+  --bg: #FAFAF7;
+  --fg: #18181B;
+  --muted: #71717A;
+  --border: #E4E4E7;
+  --accent: #92764A;
+  --accent-hover: #7A6339;
 }
 
 @layer base {
@@ -23,37 +23,33 @@
     -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4 {
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
   *:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
   }
   ::selection {
-    background-color: rgb(160 132 92 / 0.15);
-    color: #1C1917;
+    background-color: rgb(146 118 74 / 0.14);
+    color: #18181B;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-button bg-accent px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:bg-accent-hover hover:shadow-soft-lg hover:-translate-y-px active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center rounded-button bg-accent px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:bg-accent-hover hover:shadow-elevated hover:-translate-y-px active:translate-y-0 active:shadow-soft disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-button border border-border bg-white px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:border-accent/40 hover:bg-accent-soft/40 hover:shadow-soft hover:-translate-y-px active:translate-y-0 active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-button border border-border bg-white px-6 py-3 text-sm font-semibold text-ink transition-all duration-300 hover:border-accent/30 hover:bg-accent-soft/50 hover:shadow-soft hover:-translate-y-px active:translate-y-0 disabled:opacity-50;
   }
-  /* text-base (16px) on mobile prevents iOS Safari auto-zoom; md:text-sm on desktop */
   .input-field {
-    @apply w-full min-w-0 max-w-full rounded-button border border-border bg-white px-4 py-3 text-base text-ink placeholder:text-muted/60 transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none select-text md:text-sm;
+    @apply w-full min-w-0 max-w-full rounded-button border border-border bg-white px-4 py-3 text-base text-ink placeholder:text-muted/50 transition-all duration-200 focus:border-accent/40 focus:shadow-inner-glow focus:outline-none select-text md:text-sm;
   }
   .card {
-    @apply rounded-card border border-border bg-white shadow-card transition-all duration-300;
+    @apply rounded-2xl border border-border bg-white shadow-elevated transition-all duration-300;
   }
   .card-hover:hover {
-    --tw-shadow: 0 4px 8px rgba(0,0,0,0.04), 0 16px 40px rgba(0,0,0,0.08);
-    --tw-shadow-colored: 0 4px 8px var(--tw-shadow-color), 0 16px 40px var(--tw-shadow-color);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-    @apply -translate-y-1 border-accent/20;
+    @apply -translate-y-1 shadow-prominent border-accent/15;
   }
   .section-heading {
     @apply font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-4xl;
@@ -65,11 +61,10 @@
     @apply bg-white/80 backdrop-blur-xl;
   }
   .divider-ornament {
-    @apply mx-auto my-6 h-px w-16 bg-gradient-to-r from-transparent via-accent/40 to-transparent;
+    @apply mx-auto my-6 h-px w-12 bg-accent/25;
   }
 }
 
-/* Outside @layer: override any ancestor user-select (Chrome bug when parent has select-none) */
 input,
 textarea {
   user-select: text !important;

@@ -166,31 +166,31 @@ export function ProfileContactCard({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-white shadow-card overflow-hidden">
-      <div className="border-b border-border bg-accent-soft/30 px-4 py-3 sm:px-5">
+    <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-elevated">
+      <div className="border-b border-border bg-accent-soft/40 px-5 py-3.5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-accent">
           Kontaktiraj ponuđača
         </p>
       </div>
 
-      <div className="p-4 sm:p-5">
+      <div className="p-5">
         {hasAny && (
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             {items.map((item) => (
               <li key={item.key}>
                 <a
                   href={item.href}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className="flex items-center gap-3 rounded-xl border border-border/60 bg-surface/50 px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent/30 hover:bg-accent-soft/30"
+                  className="flex items-center gap-3 rounded-xl border border-border/50 bg-surface/40 px-3.5 py-2.5 text-sm text-ink transition-all duration-200 hover:border-accent/25 hover:bg-accent-soft/40 hover:shadow-soft"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       {ICON_SVG[item.icon]}
                     </svg>
                   </span>
                   <span className={item.key === "address" ? "truncate flex-1 min-w-0" : "truncate"}>{item.displayText}</span>
-                  <span className={item.key === "address" ? "text-[11px] font-semibold uppercase text-accent shrink-0" : "ml-auto text-[11px] font-semibold uppercase text-accent"}>
+                  <span className={item.key === "address" ? "text-[10px] font-semibold uppercase text-accent/70 shrink-0" : "ml-auto text-[10px] font-semibold uppercase text-accent/70"}>
                     {item.ctaText}
                   </span>
                 </a>

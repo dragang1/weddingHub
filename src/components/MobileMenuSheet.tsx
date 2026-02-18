@@ -75,7 +75,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm"
+        className="fixed inset-0 z-[9998] bg-ink/30 backdrop-blur-sm"
         aria-hidden
         onClick={onClose}
       />
@@ -87,7 +87,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
         aria-modal="true"
         aria-label="Navigacija"
         tabIndex={-1}
-        className="fixed inset-y-0 right-0 z-[9999] w-[min(320px,85vw)] bg-white shadow-2xl focus:outline-none"
+        className="fixed inset-y-0 right-0 z-[9999] w-[min(320px,85vw)] bg-white shadow-prominent focus:outline-none"
       >
         <div className="flex h-full min-h-0 flex-col">
           <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4">
@@ -98,7 +98,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
               className="-m-2 rounded-lg p-2 text-muted transition-colors hover:bg-accent-soft/50 hover:text-ink"
               aria-label="Zatvori meni"
             >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

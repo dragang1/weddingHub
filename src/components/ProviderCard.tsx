@@ -72,9 +72,8 @@ export function ProviderCard({
   const displayBadges = badges.slice(0, 2);
 
   return (
-    <article className="group card card-hover overflow-hidden">
+    <article className="group overflow-hidden rounded-2xl border border-border bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated hover:border-accent/15">
       <Link href={`/profil/${provider.id}`} className="block">
-        {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden bg-accent-soft/20">
           <Image
             src={thumb}
@@ -83,11 +82,9 @@ export function ProviderCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
-          {/* Subtle hover gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
 
-        {/* Content */}
         <div className="p-5 sm:p-6">
           <h2 className="font-serif text-lg font-bold text-ink">
             {provider.name}
@@ -119,7 +116,7 @@ export function ProviderCard({
               {displayBadges.map((b) => (
                 <span
                   key={b.key}
-                  className="inline-flex items-center rounded-full bg-accent-soft/80 px-2.5 py-0.5 text-[11px] font-medium text-accent-hover"
+                  className="inline-flex items-center rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent-hover"
                 >
                   {b.label}
                 </span>
@@ -127,13 +124,13 @@ export function ProviderCard({
             </div>
           )}
 
-          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-all duration-200 group-hover:gap-2.5">
+          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-all duration-200 group-hover:gap-2.5">
             Pogledaj profil
             <svg
               className="h-4 w-4"
               fill="none"
               stroke="currentColor"
-              strokeWidth={2}
+              strokeWidth={1.5}
               viewBox="0 0 24 24"
             >
               <path
