@@ -27,7 +27,7 @@ export default async function AdminProvidersPage() {
 
   const categoryOrder = CATEGORIES.map((c) => c.slug);
   const otherCategories = Array.from(byCategory.keys()).filter(
-    (slug) => !categoryOrder.includes(slug)
+    (slug) => !categoryOrder.includes(slug as CategorySlug)
   );
 
   function serviceAreaSummary(p: { isNationwide: boolean; serviceCities: string[] }) {
