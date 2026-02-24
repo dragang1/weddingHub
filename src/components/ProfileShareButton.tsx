@@ -43,7 +43,7 @@ export function ProfileShareButton({ title }: ProfileShareButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-stone-300 hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-accent/20"
+      className="inline-flex items-center gap-2 rounded-full border border-stone-200 dark:border-stone-600 bg-white dark:bg-stone-800 px-4 py-2 text-sm font-medium text-ink dark:text-stone-100 transition-colors hover:border-stone-300 dark:hover:border-stone-500 hover:bg-stone-50 dark:hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-accent/20"
       aria-label={copied ? "Link kopiran" : "Podijeli stranicu"}
     >
       <svg

@@ -53,25 +53,25 @@ export default async function CategoryPage({
   const headingPrefix = eventHeadingPrefix(eventType);
 
   return (
-    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream">
+    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream dark:bg-stone-900">
       <SiteHeader />
       <main className="min-w-0 flex-1">
         {/* Page header */}
-        <header className="border-b border-stone-200 bg-white/80 backdrop-blur-sm">
+        <header className="border-b border-stone-200 dark:border-stone-700 bg-white/80 dark:bg-stone-800/80 backdrop-blur-sm">
           <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 md:px-8">
-            <nav className="flex flex-wrap items-center gap-x-2 text-sm text-stone-500" aria-label="Breadcrumb">
+            <nav className="flex flex-wrap items-center gap-x-2 text-sm text-stone-500 dark:text-stone-400" aria-label="Breadcrumb">
               <Link
                 href="/"
-                className="transition-colors hover:text-accent"
+                className="transition-colors hover:text-accent dark:hover:text-amber-400"
               >
                 Početna
               </Link>
-              <span className="text-stone-300">/</span>
-              <span className="font-medium text-ink break-words">
+              <span className="text-stone-300 dark:text-stone-500">/</span>
+              <span className="font-medium text-ink dark:text-stone-100 break-words">
                 {categoryTitle}
               </span>
             </nav>
-            <h1 className="mt-3 break-words font-serif text-xl font-bold tracking-tight text-ink sm:text-2xl md:text-3xl lg:text-4xl">
+            <h1 className="mt-3 break-words font-serif text-xl font-bold tracking-tight text-ink dark:text-stone-100 sm:text-2xl md:text-3xl lg:text-4xl">
               {categoryTitle} {headingPrefix}
             </h1>
           </div>
@@ -80,20 +80,20 @@ export default async function CategoryPage({
         <div className="mx-auto w-full max-w-7xl min-w-0 px-5 py-12 sm:px-8 sm:py-16 md:py-24">
           <div className="max-w-xl space-y-8 sm:space-y-10">
             {/* Category confirmation card */}
-            <div className="rounded-2xl border border-stone-200/80 bg-white p-6 sm:p-8 shadow-marketplace">
+            <div className="rounded-2xl border border-stone-200/80 dark:border-stone-600/60 bg-white dark:bg-stone-800/80 p-6 sm:p-8 shadow-marketplace dark:shadow-none">
               <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-soft border border-accent/20 text-accent transition-colors duration-500">
                   <CategoryIcon slug={slug} className="h-6 w-6" strokeWidth={1.5} />
                 </span>
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">Odabrano</p>
-                  <p className="font-serif text-2xl font-bold text-ink break-words">
+                  <p className="font-serif text-2xl font-bold text-ink dark:text-stone-100 break-words">
                     {categoryTitle}
                   </p>
-                  <p className="mt-2 text-base text-stone-500 font-light leading-relaxed">{description}</p>
+                  <p className="mt-2 text-base text-stone-500 dark:text-stone-400 font-light leading-relaxed">{description}</p>
                   <Link
                     href="/#kategorije"
-                    className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors hover:text-accent focus:outline-none"
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink dark:text-stone-200 transition-colors hover:text-accent dark:hover:text-amber-400 focus:outline-none"
                   >
                     <svg
                       className="h-4 w-4 shrink-0 transition-transform hover:-translate-x-1"
@@ -123,7 +123,7 @@ export default async function CategoryPage({
             />
 
             {/* Info hint */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-semibold uppercase tracking-widest text-stone-400">
+            <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500">
               <span className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/40" />
                 Odaberi uslugu

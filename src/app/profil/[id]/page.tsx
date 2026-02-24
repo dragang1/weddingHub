@@ -77,10 +77,10 @@ function ProviderDetailsSection({ details }: { details: ProviderDetails }) {
 
   return (
     <section
-      className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-marketplace sm:p-8 lg:p-10"
+      className="rounded-2xl border border-stone-200/80 dark:border-stone-600/60 bg-white dark:bg-stone-800 p-6 shadow-marketplace dark:shadow-none sm:p-8 lg:p-10"
       aria-labelledby="kljucni-detalji-heading"
     >
-      <h2 id="kljucni-detalji-heading" className="section-heading mb-4 !text-xl sm:!text-2xl lg:!text-3xl">
+      <h2 id="kljucni-detalji-heading" className="section-heading dark:text-stone-100 mb-4 !text-xl sm:!text-2xl lg:!text-3xl">
         Ključni detalji
       </h2>
       <div className="divider-ornament ml-0" />
@@ -88,12 +88,12 @@ function ProviderDetailsSection({ details }: { details: ProviderDetails }) {
         {items.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col gap-1 rounded-2xl bg-stone-50/80 border border-stone-200/60 px-5 py-4"
+              className="flex flex-col gap-1 rounded-2xl bg-stone-50/80 dark:bg-stone-700/80 border border-stone-200/60 dark:border-stone-600/60 px-5 py-4"
             >
-            <dt className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+            <dt className="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400">
               {item.label}
             </dt>
-            <dd className="text-base font-semibold text-ink">{item.value}</dd>
+            <dd className="text-base font-semibold text-ink dark:text-stone-100">{item.value}</dd>
           </div>
         ))}
       </dl>
@@ -165,7 +165,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const hasGallery = hasGalleryImages || hasVideos;
 
   return (
-    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream">
+    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream dark:bg-stone-900">
       <SiteHeader />
 
       <main className="flex-1">
@@ -175,7 +175,7 @@ export default async function ProfilePage({ params }: PageProps) {
             <Link
               href={backUrl}
               title={`Nazad na ${categoryTitle} u ${provider.locationCity}`}
-              className="inline-flex items-center gap-2 shrink-0 text-sm font-medium text-stone-500 transition-colors hover:text-ink"
+              className="inline-flex items-center gap-2 shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400 transition-colors hover:text-ink dark:hover:text-stone-100"
             >
               <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -187,12 +187,12 @@ export default async function ProfilePage({ params }: PageProps) {
           </div>
 
           {/* Profile header: name + address, then gallery */}
-          <header className="mt-6 pb-6 sm:mt-8 sm:pb-8 border-b border-stone-200">
-            <h1 className="font-serif text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
+          <header className="mt-6 pb-6 sm:mt-8 sm:pb-8 border-b border-stone-200 dark:border-stone-700">
+            <h1 className="font-serif text-3xl font-bold tracking-tight text-ink dark:text-stone-100 sm:text-4xl md:text-5xl">
               {provider.name}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <svg className="h-4 w-4 shrink-0 text-stone-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
+              <svg className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
               </svg>
@@ -201,7 +201,7 @@ export default async function ProfilePage({ params }: PageProps) {
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(provider.address)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/80 px-3 py-1.5 text-sm font-medium text-accent transition-colors hover:border-accent/30 hover:bg-accent-soft/40 hover:text-accent-hover"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 dark:border-stone-600 bg-stone-50/80 dark:bg-stone-700/80 px-3 py-1.5 text-sm font-medium text-accent dark:text-amber-300 transition-colors hover:border-accent/30 hover:bg-accent-soft/40 dark:hover:bg-accent/30 dark:hover:text-amber-200 hover:text-accent-hover"
                 >
                   {provider.address}
                   <svg className="h-3.5 w-3.5 shrink-0 opacity-70" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
@@ -209,7 +209,7 @@ export default async function ProfilePage({ params }: PageProps) {
                   </svg>
                 </a>
               ) : (
-                <span className="text-sm text-stone-500 sm:text-base">{provider.locationCity}</span>
+                <span className="text-sm text-stone-500 dark:text-stone-400 sm:text-base">{provider.locationCity}</span>
               )}
             </div>
           </header>
@@ -220,7 +220,7 @@ export default async function ProfilePage({ params }: PageProps) {
               {/* Gallery */}
               {hasGallery && (
                 <section aria-labelledby="galerija-heading" className="space-y-4">
-                  <h2 id="galerija-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-500">
+                  <h2 id="galerija-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
                     Galerija
                   </h2>
                   {hasGalleryImages &&
@@ -239,14 +239,14 @@ export default async function ProfilePage({ params }: PageProps) {
 
               {/* O nama */}
               <section
-                className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-marketplace sm:p-8 lg:p-10"
+                className="rounded-2xl border border-stone-200/80 dark:border-stone-600/60 bg-white dark:bg-stone-800 p-6 shadow-marketplace dark:shadow-none sm:p-8 lg:p-10"
                 aria-labelledby="opis-heading"
               >
-                <h2 id="opis-heading" className="section-heading mb-4 !text-xl sm:!text-2xl lg:!text-3xl">
+                <h2 id="opis-heading" className="section-heading dark:text-stone-100 mb-4 !text-xl sm:!text-2xl lg:!text-3xl">
                   O nama
                 </h2>
                 <div className="divider-ornament ml-0" />
-                <p className="whitespace-pre-wrap text-base leading-relaxed text-stone-500 font-light">
+                <p className="whitespace-pre-wrap text-base leading-relaxed text-stone-600 dark:text-stone-300 font-light">
                   {provider.description}
                 </p>
               </section>
@@ -276,20 +276,20 @@ export default async function ProfilePage({ params }: PageProps) {
               {/* Pošaljite upit — single section, form has no duplicate title */}
               <section
                 id="upit"
-                className="scroll-mt-28 rounded-2xl border border-stone-200/80 bg-white p-6 shadow-marketplace sm:p-8 lg:p-10"
+                className="scroll-mt-28 rounded-2xl border border-stone-200/80 dark:border-stone-600/60 bg-white dark:bg-stone-800 p-6 shadow-marketplace dark:shadow-none sm:p-8 lg:p-10"
                 aria-labelledby="upit-heading"
               >
-                <h2 id="upit-heading" className="section-heading mb-1 !text-xl sm:!text-2xl lg:!text-3xl">
+                <h2 id="upit-heading" className="section-heading dark:text-stone-100 mb-1 !text-xl sm:!text-2xl lg:!text-3xl">
                   Pošaljite upit
                 </h2>
-                <p className="mb-6 text-sm text-stone-500">Ispunite formu ispod; pružatelj će vam se javiti u najkraćem roku.</p>
+                <p className="mb-6 text-sm text-stone-500 dark:text-stone-400">Ispunite formu ispod; pružatelj će vam se javiti u najkraćem roku.</p>
                 <LeadForm providerId={provider.id} providerName={provider.name} />
               </section>
 
               {/* Slični stručnjaci */}
               {similar.length > 0 && (
                 <section aria-labelledby="slicni-heading" className="pt-4 sm:pt-6">
-                  <h2 id="slicni-heading" className="section-heading mb-6 !text-xl sm:!text-2xl lg:!text-3xl">
+                  <h2 id="slicni-heading" className="section-heading dark:text-stone-100 mb-6 !text-xl sm:!text-2xl lg:!text-3xl">
                     Slični stručnjaci u blizini
                   </h2>
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -329,7 +329,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </div>
 
         {/* Boundary before footer */}
-        <div className="border-t border-stone-200 bg-stone-50/50" aria-hidden />
+        <div className="border-t border-stone-200 dark:border-stone-700 bg-stone-50/50 dark:bg-stone-800/50" aria-hidden />
       </main>
 
       <SiteFooter />

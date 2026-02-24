@@ -60,13 +60,13 @@
     @apply inline-flex items-center justify-center rounded-button bg-accent px-8 py-3.5 text-sm font-medium text-white shadow-soft transition-all duration-300 hover:bg-accent-hover hover:shadow-elevated hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-button border border-stone-300 bg-transparent px-8 py-3.5 text-sm font-medium text-ink transition-all duration-300 hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-button border border-stone-300 bg-transparent px-8 py-3.5 text-sm font-medium text-ink transition-all duration-300 hover:border-stone-400 hover:bg-stone-50 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 dark:border-stone-500 dark:text-stone-100 dark:hover:bg-stone-700 dark:hover:border-stone-400;
   }
   .input-field {
-    @apply w-full min-w-0 max-w-full rounded-xl border border-stone-200 bg-white px-5 py-3.5 text-base text-ink placeholder:text-stone-400 transition-all duration-300 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none select-text;
+    @apply w-full min-w-0 max-w-full rounded-xl border border-stone-200 bg-white dark:border-stone-600 dark:bg-stone-800 dark:text-stone-100 px-5 py-3.5 text-base text-ink placeholder:text-stone-400 dark:placeholder:text-stone-500 transition-all duration-300 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none select-text;
   }
   .card {
-    @apply rounded-2xl border border-stone-200/80 bg-white shadow-soft transition-all duration-500;
+    @apply rounded-2xl border border-stone-200/80 bg-white dark:border-stone-600/60 dark:bg-stone-800/80 shadow-soft dark:shadow-none transition-all duration-500;
   }
   .section-heading {
     @apply font-serif text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl;

@@ -105,10 +105,10 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
 
   if (status === "cooldown" && cooldownSec > 0) {
     return (
-      <div className="rounded-2xl border border-stone-200 bg-white shadow-marketplace overflow-hidden">
-        <div className="bg-accent-soft/50 p-8 text-center sm:p-10">
-          <p className="font-medium text-ink">Hvala. Upit je poslan.</p>
-          <p className="mt-2 text-sm text-stone-500">
+      <div className="rounded-2xl border border-stone-200 dark:border-stone-600 bg-white dark:bg-stone-800 shadow-marketplace dark:shadow-none overflow-hidden">
+        <div className="bg-accent-soft/50 dark:bg-accent/15 p-8 text-center sm:p-10">
+          <p className="font-medium text-ink dark:text-stone-100">Hvala. Upit je poslan.</p>
+          <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
             Novi upit možete poslati za {cooldownSec} sekundi.
           </p>
         </div>
@@ -120,47 +120,47 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
     <form onSubmit={handleSubmit} className="min-w-0">
       <div className="space-y-5 sm:space-y-6">
         <div>
-          <label htmlFor="lead-name" className="mb-1.5 block text-sm font-medium text-ink">
-            Ime i prezime <span className="text-stone-400">*</span>
+          <label htmlFor="lead-name" className="mb-1.5 block text-sm font-medium text-ink dark:text-stone-100">
+            Ime i prezime <span className="text-stone-400 dark:text-stone-500">*</span>
           </label>
           <input
             id="lead-name"
             name="name"
             type="text"
             required
-            className="input-field w-full rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+            className="input-field w-full rounded-xl border-stone-200 dark:border-stone-600 bg-stone-50/50 dark:bg-stone-700/50 py-3 transition-colors focus:bg-white dark:focus:bg-stone-800"
             placeholder="npr. Ana Horvat"
           />
         </div>
         <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
           <div>
-            <label htmlFor="lead-email" className="mb-1.5 block text-sm font-medium text-ink">
+            <label htmlFor="lead-email" className="mb-1.5 block text-sm font-medium text-ink dark:text-stone-100">
               Email
             </label>
             <input
               id="lead-email"
               name="email"
               type="email"
-              className="input-field w-full rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+              className="input-field w-full rounded-xl border-stone-200 dark:border-stone-600 bg-stone-50/50 dark:bg-stone-700/50 py-3 transition-colors focus:bg-white dark:focus:bg-stone-800"
               placeholder="opcionalno"
             />
           </div>
           <div>
-            <label htmlFor="lead-phone" className="mb-1.5 block text-sm font-medium text-ink">
+            <label htmlFor="lead-phone" className="mb-1.5 block text-sm font-medium text-ink dark:text-stone-100">
               Telefon
             </label>
             <input
               id="lead-phone"
               name="phone"
               type="tel"
-              className="input-field w-full rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+              className="input-field w-full rounded-xl border-stone-200 dark:border-stone-600 bg-stone-50/50 dark:bg-stone-700/50 py-3 transition-colors focus:bg-white dark:focus:bg-stone-800"
               placeholder="opcionalno"
             />
           </div>
         </div>
         <div>
-          <label htmlFor="lead-message" className="mb-1.5 block text-sm font-medium text-ink">
-            Poruka <span className="text-stone-400">*</span> <span className="text-xs font-normal text-stone-500">(min. 20 znakova)</span>
+          <label htmlFor="lead-message" className="mb-1.5 block text-sm font-medium text-ink dark:text-stone-100">
+            Poruka <span className="text-stone-400 dark:text-stone-500">*</span> <span className="text-xs font-normal text-stone-500 dark:text-stone-400">(min. 20 znakova)</span>
           </label>
           <textarea
             id="lead-message"
@@ -168,21 +168,21 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
             rows={4}
             required
             minLength={20}
-            className="input-field w-full resize-y rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+            className="input-field w-full resize-y rounded-xl border-stone-200 dark:border-stone-600 bg-stone-50/50 dark:bg-stone-700/50 py-3 transition-colors focus:bg-white dark:focus:bg-stone-800"
             placeholder="Opišite šta vam treba, datum događaja, broj gostiju..."
           />
         </div>
       </div>
 
       {errorMsg && (
-        <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 sm:mt-6">
-          <p className="text-sm text-red-700" role="alert">
+        <div className="mt-5 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 px-4 py-3 sm:mt-6">
+          <p className="text-sm text-red-700 dark:text-red-200" role="alert">
             {errorMsg}
           </p>
         </div>
       )}
 
-      <div className="mt-6 pt-6 border-t border-stone-200">
+      <div className="mt-6 pt-6 border-t border-stone-200 dark:border-stone-600">
         <button
           type="submit"
           disabled={status === "loading"}

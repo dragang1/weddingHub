@@ -150,34 +150,58 @@ export function ProfileContactCard({
 
   const copyContact = () => {
     const parts: string[] = [];
-    if (address) parts.push(`Adresa: ${address}`);
-    if (phone) parts.push(`Tel: ${phone}`);
-    if (email) parts.push(`Email: ${email}`);
-    if (website) parts.push(`Web: ${website}`);
-    if (instagram) parts.push(`Instagram: ${instagramUrl(instagram)}`);
-    if (facebook) parts.push(`Facebook: ${facebookUrl(facebook)}`);
+    if (nonEmpty(address)) parts.push(`Adresa: ${address.trim()}`);
+    if (nonEmpty(phone)) parts.push(`Tel: ${phone.trim()}`);
+    if (nonEmpty(email)) parts.push(`Email: ${email.trim()}`);
+    if (nonEmpty(website)) parts.push(`Web: ${website.trim()}`);
+    if (nonEmpty(instagram)) parts.push(`Instagram: ${instagramUrl(instagram)}`);
+    if (nonEmpty(facebook)) parts.push(`Facebook: ${facebookUrl(facebook)}`);
     const text = parts.join("\n");
-    if (text && typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
+    if (!text) return;
+
+    const showCopied = () => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
+
+    const fallbackCopy = () => {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        textarea.style.top = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        if (ok) showCopied();
+      } catch {
+        // ignore
+      }
+    };
+
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
     }
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-marketplace">
-      <div className="border-b border-stone-100 bg-accent-soft/30 px-6 py-5 flex items-center gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+    <div className="overflow-hidden rounded-2xl border border-stone-200/80 dark:border-stone-600/60 bg-white dark:bg-stone-800 shadow-marketplace dark:shadow-none">
+      <div className="border-b border-stone-100 dark:border-stone-600 bg-accent-soft/30 dark:bg-accent/15 px-6 py-5 flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft dark:bg-accent/30 text-accent">
           <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
           </svg>
         </span>
         <div>
-          <p className="text-sm font-bold text-ink">
+          <p className="text-sm font-bold text-ink dark:text-stone-100">
             Kontakt informacije
           </p>
-          <p className="text-xs text-stone-500 mt-0.5">Direktan kontakt sa pružaocem</p>
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Direktan kontakt sa pružaocem</p>
         </div>
       </div>
 
@@ -190,18 +214,18 @@ export function ProfileContactCard({
                   href={item.href}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className="group flex items-center gap-4 rounded-xl border border-stone-200 bg-stone-50/50 px-4 py-3.5 text-sm text-ink transition-all duration-300 hover:border-accent/30 hover:bg-accent-soft/30 hover:shadow-sm"
+                  className="group flex items-center gap-4 rounded-xl border border-stone-200 dark:border-stone-600 bg-stone-50/50 dark:bg-stone-700/50 px-4 py-3.5 text-sm text-ink dark:text-stone-100 transition-all duration-300 hover:border-accent/30 hover:bg-accent-soft/30 dark:hover:bg-accent/20 hover:shadow-sm"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white border border-stone-200 text-stone-500 transition-colors group-hover:bg-accent-soft group-hover:text-accent group-hover:border-accent/20">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-600 text-stone-500 dark:text-stone-400 transition-colors group-hover:bg-accent-soft group-hover:text-accent group-hover:border-accent/20">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       {ICON_SVG[item.icon]}
                     </svg>
                   </span>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-0.5">{item.ctaText}</span>
-                    <span className="truncate text-ink font-medium">{item.displayText}</span>
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-0.5">{item.ctaText}</span>
+                    <span className="truncate text-ink dark:text-stone-100 font-medium">{item.displayText}</span>
                   </div>
-                  <svg className="h-4 w-4 text-stone-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 text-stone-400 dark:text-stone-500 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                   </svg>
                 </a>
@@ -211,7 +235,7 @@ export function ProfileContactCard({
         )}
 
         {hasAny && (
-          <div className="mt-6 pt-6 border-t border-stone-100">
+          <div className="mt-6 pt-6 border-t border-stone-100 dark:border-stone-600">
             <button
               type="button"
               onClick={copyContact}

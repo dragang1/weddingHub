@@ -103,29 +103,29 @@ export async function CategoryCityResults({
   const subtext = categoryEventSubtext(categorySlug, eventType);
 
   return (
-    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream">
+    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream dark:bg-stone-900">
       <SiteHeader />
 
       {/* Page header */}
-      <header className="border-b border-stone-200 bg-white/90 backdrop-blur-sm shadow-sm relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-surface to-white pointer-events-none" aria-hidden />
+      <header className="border-b border-stone-200 dark:border-stone-700 bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm shadow-sm relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-surface to-white dark:from-stone-800 dark:to-stone-800 pointer-events-none" aria-hidden />
         <div className="relative mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
-          <nav className="flex flex-wrap items-center gap-x-3 text-xs font-semibold uppercase tracking-widest text-stone-500 mb-6" aria-label="Breadcrumb">
+          <nav className="flex flex-wrap items-center gap-x-3 text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-6" aria-label="Breadcrumb">
             <Link
               href="/"
-              className="transition-colors hover:text-ink"
+              className="transition-colors hover:text-ink dark:hover:text-stone-100"
             >
               Početna
             </Link>
-            <span className="text-border">/</span>
-            <span className="truncate">{label}</span>
-            <span className="text-border">/</span>
+            <span className="text-border dark:text-stone-600">/</span>
+            <span className="truncate dark:text-stone-300">{label}</span>
+            <span className="text-border dark:text-stone-600">/</span>
             <span className="text-accent truncate">{cityDisplay}</span>
           </nav>
-          <h1 className="font-serif text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl lg:text-6xl max-w-3xl">
+          <h1 className="font-serif text-3xl font-bold tracking-tight text-ink dark:text-stone-100 sm:text-4xl md:text-5xl lg:text-6xl max-w-3xl">
             {label} {headingPrefix} {isShowAll ? "u cijeloj BiH" : `u ${cityDisplay}`}
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-stone-500 font-light max-w-2xl">{subtext}</p>
+          <p className="mt-4 text-base sm:text-lg text-stone-500 dark:text-stone-400 font-light max-w-2xl">{subtext}</p>
         </div>
       </header>
 
@@ -145,9 +145,9 @@ export async function CategoryCityResults({
                       ? `${cat.path}/${citySlug}`
                       : `${cat.path}/${citySlug}?event=${eventType}`
                   }
-                  className="group flex shrink-0 snap-start items-center gap-3 rounded-full border border-stone-200 bg-white px-5 py-2.5 text-sm font-medium text-ink transition-all duration-300 hover:border-stone-300 hover:shadow-marketplace focus:outline-none"
+                  className="group flex shrink-0 snap-start items-center gap-3 rounded-full border border-stone-200 dark:border-stone-600 bg-white dark:bg-stone-800 px-5 py-2.5 text-sm font-medium text-ink dark:text-stone-100 transition-all duration-300 hover:border-stone-300 dark:hover:border-stone-500 hover:shadow-marketplace focus:outline-none"
                 >
-                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-stone-100 text-stone-500 transition-colors group-hover:bg-ink group-hover:text-white" aria-hidden>
+                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-stone-100 dark:bg-stone-700 text-stone-500 dark:text-stone-400 transition-colors group-hover:bg-ink group-hover:text-white" aria-hidden>
                     <CategoryIcon slug={cat.slug} className="h-3.5 w-3.5" strokeWidth={2} />
                   </span>
                   <span>{cat.label}</span>
@@ -177,18 +177,18 @@ export async function CategoryCityResults({
 
           {/* Results */}
           <div className="min-w-0 overflow-hidden">
-            <p className="mb-6 text-sm text-stone-500 uppercase tracking-widest font-semibold">
-              <span className="text-ink mr-2">
+            <p className="mb-6 text-sm text-stone-500 dark:text-stone-400 uppercase tracking-widest font-semibold">
+              <span className="text-ink dark:text-stone-100 mr-2">
                 {providers.length}
               </span>
               {providers.length === 1 ? "rezultat" : "rezultata"}
             </p>
 
             {providers.length === 0 ? (
-              <div className="card flex flex-col items-center justify-center p-10 text-center sm:p-16 border-dashed border-2">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-stone-50 border border-stone-200">
+              <div className="card flex flex-col items-center justify-center p-10 text-center sm:p-16 border-dashed border-2 dark:border-stone-600">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-stone-50 dark:bg-stone-700 border border-stone-200 dark:border-stone-600">
                   <svg
-                    className="h-8 w-8 text-stone-400"
+                    className="h-8 w-8 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={1.5}
@@ -201,10 +201,10 @@ export async function CategoryCityResults({
                     />
                   </svg>
                 </div>
-                <h2 className="mt-6 font-serif text-2xl font-bold text-ink">
+                <h2 className="mt-6 font-serif text-2xl font-bold text-ink dark:text-stone-100">
                   Trenutno nema ponuđača u ovom gradu
                 </h2>
-                <p className="mt-3 text-base text-stone-500 font-light max-w-md mx-auto">
+                <p className="mt-3 text-base text-stone-500 dark:text-stone-400 font-light max-w-md mx-auto">
                   Pokušajte promijeniti filtere ili pogledajte naše najtraženije lokacije za ovu uslugu.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -216,7 +216,7 @@ export async function CategoryCityResults({
                           ? `${basePath}/${cityInputToCanonicalSlug(name)}`
                           : `${basePath}/${cityInputToCanonicalSlug(name)}?event=${eventType}`
                       }
-                      className="rounded-full border border-stone-200 bg-white px-5 py-2 text-sm font-medium text-ink transition-all duration-300 hover:border-stone-300 hover:shadow-marketplace"
+                      className="rounded-full border border-stone-200 dark:border-stone-600 bg-white dark:bg-stone-800 px-5 py-2 text-sm font-medium text-ink dark:text-stone-100 transition-all duration-300 hover:border-stone-300 dark:hover:border-stone-500 hover:shadow-marketplace"
                     >
                       {name}
                     </Link>

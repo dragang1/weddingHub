@@ -52,10 +52,10 @@ export function CategoryCityStep({
   }
 
   return (
-    <div className="card min-w-0 overflow-hidden">
-      <div className="bg-accent-soft/30 px-4 py-3 sm:px-6 sm:py-4 md:px-8">
+    <div className="card min-w-0 overflow-hidden dark:border-stone-600/60 dark:bg-stone-800/80">
+      <div className="bg-accent-soft/30 dark:bg-accent/15 px-4 py-3 sm:px-6 sm:py-4 md:px-8">
         <p className="section-label text-accent">Grad</p>
-        <p className="mt-1 font-serif text-base font-bold text-ink break-words">
+        <p className="mt-1 font-serif text-base font-bold text-ink dark:text-stone-100 break-words">
           U kojem gradu vam treba usluga?
         </p>
       </div>
@@ -102,8 +102,8 @@ export function CategoryCityStep({
                 onClick={() => handleChipClick(name)}
                 className={`rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/20 ${
                   city === name
-                    ? "border-accent/40 bg-accent-soft text-accent-hover shadow-soft"
-                    : "border-stone-200 bg-white text-ink hover:border-accent/30 hover:bg-accent-soft/40"
+                    ? "border-accent/40 bg-accent-soft text-accent-hover shadow-soft dark:bg-accent/30 dark:border-accent/40 dark:text-stone-100"
+                    : "border-stone-200 bg-white dark:border-stone-600 dark:bg-stone-700 text-ink dark:text-stone-100 hover:border-accent/30 hover:bg-accent-soft/40 dark:hover:bg-accent/20 dark:hover:border-accent/30"
                 }`}
               >
                 {name}
@@ -117,7 +117,7 @@ export function CategoryCityStep({
         </button>
 
         {allowShowAll && (
-          <p className="pt-2 text-sm text-stone-500">
+          <p className="pt-2 text-sm text-stone-500 dark:text-stone-400">
             <a
               href={`${categoryPath}/sve${eventType === "wedding" ? "" : `?event=${eventType}`}`}
               className="font-medium text-accent hover:text-accent-hover underline underline-offset-2 focus:outline-none focus:ring-2 focus:ring-accent/20 rounded"

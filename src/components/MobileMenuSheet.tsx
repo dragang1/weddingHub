@@ -7,9 +7,12 @@ import { usePathname } from "next/navigation";
 
 const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
+type ActiveSectionId = "kako-funkcionise" | "kategorije" | null;
+
 type MobileMenuSheetProps = {
   open: boolean;
   onClose: () => void;
+  activeSection?: ActiveSectionId;
 };
 
 const MENU_ITEMS = [
@@ -19,7 +22,12 @@ const MENU_ITEMS = [
   { href: "/postanite-partner", label: "Postanite partner" },
 ];
 
-export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
+const MENU_HREF_TO_SECTION: Record<string, ActiveSectionId> = {
+  "/#kategorije": "kategorije",
+  "/#kako-funkcionise": "kako-funkcionise",
+};
+
+export function MobileMenuSheet({ open, onClose, activeSection = null }: MobileMenuSheetProps) {
   const pathname = usePathname();
   const focusRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -75,7 +83,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-[9998] bg-ink/30 backdrop-blur-sm"
+        className="fixed inset-0 z-[9998] bg-ink/30 dark:bg-black/50 backdrop-blur-sm"
         aria-hidden
         onClick={onClose}
       />
@@ -87,15 +95,15 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
         aria-modal="true"
         aria-label="Navigacija"
         tabIndex={-1}
-        className="fixed inset-y-0 right-0 z-[9999] w-[min(320px,85vw)] bg-white shadow-prominent focus:outline-none"
+        className="fixed inset-y-0 right-0 z-[9999] w-[min(320px,85vw)] bg-white dark:bg-stone-800 shadow-prominent focus:outline-none"
       >
         <div className="flex h-full min-h-0 flex-col">
-          <div className="flex shrink-0 items-center justify-between border-b border-stone-200 px-5 py-4">
-            <span className="font-serif text-lg font-bold text-ink">Meni</span>
+          <div className="flex shrink-0 items-center justify-between border-b border-stone-200 dark:border-stone-600 px-5 py-4">
+            <span className="font-serif text-lg font-bold text-ink dark:text-stone-100">Meni</span>
             <button
               type="button"
               onClick={onClose}
-              className="-m-2 rounded-lg p-2 text-stone-500 transition-colors hover:bg-accent-soft/50 hover:text-ink"
+              className="-m-2 rounded-lg p-2 text-stone-500 dark:text-stone-400 transition-colors hover:bg-accent-soft/50 dark:hover:bg-stone-700 hover:text-ink dark:hover:text-stone-100"
               aria-label="Zatvori meni"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -107,8 +115,9 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
             <ul className="space-y-1">
               {MENU_ITEMS.map((item) => {
                 const isHashLink = item.href.startsWith("/#");
+                const sectionForLink = isHashLink ? MENU_HREF_TO_SECTION[item.href] : null;
                 const isActive = isHashLink
-                  ? pathname === "/"
+                  ? pathname === "/" && sectionForLink != null && activeSection === sectionForLink
                   : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
                 return (
                   <li key={item.href}>
@@ -117,7 +126,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
                         href={item.href}
                         onClick={handleLinkClick}
                         className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium transition-colors ${
-                          isActive ? "bg-accent-soft/60 text-accent-hover" : "text-ink hover:bg-accent-soft/40"
+                          isActive ? "bg-accent-soft/60 dark:bg-accent/30 text-accent-hover dark:text-amber-200" : "text-ink dark:text-stone-100 hover:bg-accent-soft/40 dark:hover:bg-stone-700"
                         }`}
                       >
                         {item.label}
@@ -127,7 +136,7 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
                         href={item.href}
                         onClick={handleLinkClick}
                         className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium transition-colors ${
-                          isActive ? "bg-accent-soft/60 text-accent-hover" : "text-ink hover:bg-accent-soft/40"
+                          isActive ? "bg-accent-soft/60 dark:bg-accent/30 text-accent-hover dark:text-amber-200" : "text-ink dark:text-stone-100 hover:bg-accent-soft/40 dark:hover:bg-stone-700"
                         }`}
                       >
                         {item.label}

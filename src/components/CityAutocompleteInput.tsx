@@ -122,7 +122,7 @@ export const CityAutocompleteInput = forwardRef<
 
   return (
     <div className="relative min-w-0 max-w-full">
-      <label htmlFor={id} className="block text-sm font-semibold text-ink">
+      <label htmlFor={id} className="block text-sm font-semibold text-ink dark:text-stone-100">
         {label}
       </label>
       <input
@@ -152,7 +152,7 @@ export const CityAutocompleteInput = forwardRef<
         <ul
           id={`${id}-listbox`}
           role="listbox"
-          className="absolute z-50 mt-1.5 max-h-52 w-full overflow-auto rounded-card border border-border bg-white py-1.5 shadow-card-hover"
+          className="absolute z-50 mt-1.5 max-h-52 w-full overflow-auto rounded-card border border-border dark:border-stone-600 bg-white dark:bg-stone-800 py-1.5 shadow-card-hover"
           aria-label="Predlozi gradova"
         >
           {suggestions.map((city, index) => (
@@ -163,8 +163,8 @@ export const CityAutocompleteInput = forwardRef<
               aria-selected={index === highlightedIndex}
               className={`cursor-pointer px-4 py-2.5 text-sm transition-colors duration-100 ${
                 index === highlightedIndex
-                  ? "bg-accent-soft font-medium text-ink"
-                  : "text-ink hover:bg-accent-soft/60"
+                  ? "bg-accent-soft dark:bg-accent/30 font-medium text-ink dark:text-stone-100"
+                  : "text-ink dark:text-stone-100 hover:bg-accent-soft/60 dark:hover:bg-stone-700"
               }`}
               onMouseDown={(e) => {
                 e.preventDefault();

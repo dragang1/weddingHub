@@ -107,48 +107,48 @@ export default function PostanitePartnerPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-cream">
+    <div className="min-h-screen flex flex-col bg-cream dark:bg-stone-900">
       <SiteHeader />
       <main className="flex-1 relative px-5 py-16 sm:px-8 sm:py-24">
-        <div className="absolute inset-0 section-pattern opacity-50 pointer-events-none" aria-hidden />
+        <div className="absolute inset-0 section-pattern opacity-50 dark:opacity-30 pointer-events-none" aria-hidden />
         <div className="relative mx-auto min-w-0 max-w-2xl">
           <div className="text-center mb-12">
             <span className="text-xs font-semibold uppercase tracking-widest text-accent mb-4 block">Partnerstvo</span>
-            <h1 className="font-serif text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+            <h1 className="font-serif text-4xl font-bold tracking-tight text-ink dark:text-stone-100 sm:text-5xl">
               Postanite dio mreže
             </h1>
-            <p className="mt-4 text-lg font-light leading-relaxed text-stone-500 max-w-lg mx-auto">
+            <p className="mt-4 text-lg font-light leading-relaxed text-stone-500 dark:text-stone-400 max-w-lg mx-auto">
               Pridružite se ekskluzivnoj platformi i predstavite svoje usluge klijentima koji traže najbolje za svoje vjenčanje.
             </p>
           </div>
 
           {status === "cooldown" ? (
-            <div className="mt-10 rounded-2xl border border-stone-200 bg-white p-10 text-center shadow-marketplace">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent mb-6">
+            <div className="mt-10 rounded-2xl border border-stone-200 dark:border-stone-600 bg-white dark:bg-stone-800 p-10 text-center shadow-marketplace dark:shadow-none">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft dark:bg-accent/30 text-accent mb-6">
                 <svg className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
-              <p className="font-serif text-2xl font-bold text-ink">
+              <p className="font-serif text-2xl font-bold text-ink dark:text-stone-100">
                 Zahtjev je uspješno poslan
               </p>
-              <p className="mt-3 text-base text-stone-500 font-light">
+              <p className="mt-3 text-base text-stone-500 dark:text-stone-400 font-light">
                 Hvala vam na interesu. Naš tim će vas uskoro kontaktirati sa daljim informacijama.
               </p>
-              <p className="mt-6 text-sm text-stone-400 uppercase tracking-widest font-semibold">
+              <p className="mt-6 text-sm text-stone-400 dark:text-stone-500 uppercase tracking-widest font-semibold">
                 Novi zahtjev moguć za {cooldownSec}s
               </p>
             </div>
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="mt-8 rounded-2xl border border-stone-200 bg-white p-8 shadow-marketplace sm:p-10"
+              className="mt-8 rounded-2xl border border-stone-200 dark:border-stone-600 bg-white dark:bg-stone-800 p-8 shadow-marketplace dark:shadow-none sm:p-10"
             >
               <div className="min-w-0 space-y-6">
                 <div>
                   <label
                     htmlFor="businessName"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                   >
                     Naziv biznisa *
                   </label>
@@ -164,7 +164,7 @@ export default function PostanitePartnerPage() {
                 <div>
                   <label
                     htmlFor="category"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                   >
                     Kategorija *
                   </label>
@@ -185,7 +185,7 @@ export default function PostanitePartnerPage() {
                 <div>
                   <label
                     htmlFor="city"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                   >
                     Grad *
                   </label>
@@ -208,7 +208,7 @@ export default function PostanitePartnerPage() {
                   <div>
                     <label
                       htmlFor="contactName"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                     >
                       Ime i prezime *
                     </label>
@@ -223,7 +223,7 @@ export default function PostanitePartnerPage() {
                   <div>
                     <label
                       htmlFor="phone"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                     >
                       Telefon *
                     </label>
@@ -239,7 +239,7 @@ export default function PostanitePartnerPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                   >
                     Email *
                   </label>
@@ -255,7 +255,7 @@ export default function PostanitePartnerPage() {
                   <div>
                     <label
                       htmlFor="instagram"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                     >
                       Instagram
                     </label>
@@ -270,7 +270,7 @@ export default function PostanitePartnerPage() {
                   <div>
                     <label
                       htmlFor="facebook"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                     >
                       Facebook
                     </label>
@@ -285,7 +285,7 @@ export default function PostanitePartnerPage() {
                   <div>
                     <label
                       htmlFor="website"
-                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                     >
                       Web stranica
                     </label>
@@ -298,10 +298,10 @@ export default function PostanitePartnerPage() {
                     />
                   </div>
                 </div>
-                <div className="pt-4 border-t border-stone-100">
+                <div className="pt-4 border-t border-stone-100 dark:border-stone-600/50">
                   <label
                     htmlFor="message"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600 dark:text-stone-400"
                   >
                     Dodatne informacije
                   </label>
@@ -333,7 +333,7 @@ export default function PostanitePartnerPage() {
                 </div>
               )}
 
-              <div className="mt-10 pt-6 border-t border-stone-100">
+              <div className="mt-10 pt-6 border-t border-stone-100 dark:border-stone-600/50">
                 <button
                   type="submit"
                   disabled={status === "loading"}
@@ -373,7 +373,7 @@ export default function PostanitePartnerPage() {
           <div className="mt-12 text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-stone-500 hover:text-ink transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400 hover:text-ink dark:hover:text-stone-100 transition-colors"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />

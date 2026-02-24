@@ -72,9 +72,9 @@ export function ProviderCard({
   const displayBadges = badges.slice(0, 2);
 
   return (
-    <article className="group overflow-hidden rounded-2xl bg-white border border-stone-200/60 shadow-marketplace transition-all duration-500 hover:-translate-y-1.5 hover:shadow-marketplace-hover hover:border-stone-200">
+    <article className="group overflow-hidden rounded-2xl bg-white dark:bg-stone-800 border border-stone-200/60 dark:border-stone-600/60 shadow-marketplace dark:shadow-none transition-all duration-500 hover:-translate-y-1.5 hover:shadow-marketplace-hover hover:border-stone-200 dark:hover:border-stone-500">
       <Link href={`/profil/${provider.id}`} className="block h-full flex flex-col">
-        <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
+        <div className="relative aspect-[4/3] overflow-hidden bg-stone-100 dark:bg-stone-700">
           <Image
             src={thumb}
             alt=""
@@ -87,10 +87,10 @@ export function ProviderCard({
 
         <div className="flex flex-col flex-1 p-6 sm:p-7">
           <div className="flex-1">
-            <h2 className="font-serif text-xl font-bold text-ink mb-1.5">
+            <h2 className="font-serif text-xl font-bold text-ink dark:text-stone-100 mb-1.5">
               {provider.name}
             </h2>
-            <p className="flex items-center gap-2 text-sm text-stone-500 font-light">
+            <p className="flex items-center gap-2 text-sm text-stone-500 dark:text-stone-400 font-light">
               <svg
                 className="h-4 w-4 text-accent shrink-0"
                 fill="none"
@@ -117,7 +117,7 @@ export function ProviderCard({
                 {displayBadges.map((b) => (
                   <span
                     key={b.key}
-                    className="inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs font-medium text-stone-600"
+                    className="inline-flex items-center rounded-full border border-stone-200 dark:border-stone-600 bg-stone-50 dark:bg-stone-700 px-3 py-1 text-xs font-medium text-stone-600 dark:text-stone-300"
                   >
                     {b.label}
                   </span>
@@ -126,11 +126,11 @@ export function ProviderCard({
             )}
           </div>
 
-          <div className="mt-6 flex items-center justify-between border-t border-stone-100 pt-4">
-            <span className="text-xs font-semibold uppercase tracking-widest text-accent transition-colors duration-300 group-hover:text-ink">
+          <div className="mt-6 flex items-center justify-between border-t border-stone-100 dark:border-stone-600 pt-4">
+            <span className="text-xs font-semibold uppercase tracking-widest text-accent transition-colors duration-300 group-hover:text-ink dark:group-hover:text-stone-100">
               Pogledaj profil
             </span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-ink transition-all duration-300 group-hover:bg-ink group-hover:text-white group-hover:translate-x-1">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 dark:bg-stone-700 text-ink dark:text-stone-100 transition-all duration-300 group-hover:bg-ink group-hover:text-white group-hover:translate-x-1">
               <svg
                 className="h-4 w-4"
                 fill="none"
