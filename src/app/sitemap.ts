@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { CATEGORIES, categoryPathSegment } from "@/lib/categories";
 import type { CategorySlug } from "@/lib/categories";
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? "https://weddinghub.example.com";
+const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? "https://eventhub.example.com";
 
 export const dynamic = "force-dynamic";
 

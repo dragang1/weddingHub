@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { Gallery } from "@/components/Gallery";
@@ -8,19 +7,18 @@ import { ProviderGalleryFeatured } from "@/components/ProviderGalleryFeatured";
 import { ProviderGalleryLightbox } from "@/components/ProviderGalleryLightbox";
 import { LeadForm } from "@/components/LeadForm";
 import { ProfileContactCard } from "@/components/ProfileContactCard";
+import { ProfileShareButton } from "@/components/ProfileShareButton";
 import { ProviderCard } from "@/components/ProviderCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { categoryPath, categoryLabel } from "@/lib/categories";
-import { getProviderImageUrl, getProviderImageUrls } from "@/lib/providerImage";
+import { getProviderImageUrls } from "@/lib/providerImage";
 import { slugifyCity } from "@/lib/cities";
-import { eventLabel } from "@/lib/events";
-import type { EventTypeSlug } from "@/lib/events";
 import { cityWhereClause } from "@/lib/providers";
 import type { CategorySlug } from "@/lib/categories";
 
 const SECTION_HEADING =
-  "mb-4 text-xs font-semibold tracking-widest text-muted uppercase";
+  "mb-4 text-xs font-semibold tracking-widest text-stone-500 uppercase";
 
 type ProviderDetails = {
   onSiteOnly?: boolean;
@@ -79,22 +77,23 @@ function ProviderDetailsSection({ details }: { details: ProviderDetails }) {
 
   return (
     <section
-      className="rounded-2xl border border-border bg-white p-6"
+      className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-marketplace sm:p-8 lg:p-10"
       aria-labelledby="kljucni-detalji-heading"
     >
-      <h2 id="kljucni-detalji-heading" className={SECTION_HEADING}>
+      <h2 id="kljucni-detalji-heading" className="section-heading mb-4 !text-xl sm:!text-2xl lg:!text-3xl">
         Ključni detalji
       </h2>
-      <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="divider-ornament ml-0" />
+      <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {items.map((item, i) => (
-          <div
-            key={i}
-            className="flex flex-col gap-0.5 rounded-xl bg-accent-soft/30 px-4 py-3"
-          >
-            <dt className="text-[11px] font-semibold uppercase tracking-wider text-muted">
+            <div
+              key={i}
+              className="flex flex-col gap-1 rounded-2xl bg-stone-50/80 border border-stone-200/60 px-5 py-4"
+            >
+            <dt className="text-xs font-semibold uppercase tracking-wider text-stone-500">
               {item.label}
             </dt>
-            <dd className="text-sm font-semibold text-ink">{item.value}</dd>
+            <dd className="text-base font-semibold text-ink">{item.value}</dd>
           </div>
         ))}
       </dl>
@@ -116,10 +115,10 @@ export async function generateMetadata({
   });
   if (!provider) return { title: "Pružatelj" };
   return {
-    title: `${provider.name} — Wedding Hub`,
+    title: `${provider.name} — Event Hub`,
     description: provider.description.slice(0, 160),
     openGraph: {
-      title: `${provider.name} — Wedding Hub`,
+      title: `${provider.name} — Event Hub`,
       description: provider.description.slice(0, 160),
     },
   };
@@ -157,11 +156,6 @@ export default async function ProfilePage({ params }: PageProps) {
   const backPath = categoryPath(provider.category as CategorySlug);
   const backUrl = `${backPath}/${slugifyCity(provider.locationCity)}`;
   const categoryTitle = categoryLabel(provider.category as CategorySlug);
-  const badgeImage =
-    getProviderImageUrl(provider.coverImageKey) ??
-    getProviderImageUrl(provider.imageKey) ??
-    getProviderImageUrl(provider.galleryImageKeys?.[0]) ??
-    null;
 
   const galleryKeys = provider.galleryImageKeys ?? [];
   const galleryUrls = getProviderImageUrls(galleryKeys);
@@ -171,176 +165,132 @@ export default async function ProfilePage({ params }: PageProps) {
   const hasGallery = hasGalleryImages || hasVideos;
 
   return (
-    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-surface">
+    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream">
       <SiteHeader />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 md:px-8">
-          {/* Back link */}
-          <Link
-            href={backUrl}
-            className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
-          >
-            <svg
-              className="h-3.5 w-3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
+        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+          {/* Top bar: compact back on mobile, full text on desktop */}
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
+            <Link
+              href={backUrl}
+              title={`Nazad na ${categoryTitle} u ${provider.locationCity}`}
+              className="inline-flex items-center gap-2 shrink-0 text-sm font-medium text-stone-500 transition-colors hover:text-ink"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-              />
-            </svg>
-            Natrag na rezultate
-          </Link>
+              <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+              <span className="hidden sm:inline">Nazad na {categoryTitle} u {provider.locationCity}</span>
+              <span className="sm:hidden">Nazad</span>
+            </Link>
+            <ProfileShareButton title={`${provider.name} — Event Hub`} />
+          </div>
 
-          {/* 2-column layout */}
-          <div className="mt-6 grid grid-cols-1 gap-10 pb-28 lg:grid-cols-[1fr_360px] sm:pb-12">
-            {/* Left: main content */}
-            <div className="space-y-10">
-              {/* ProviderHeader: badge (left) | name+address | meta column */}
-              <header className="flex flex-row flex-wrap items-start gap-4 sm:flex-nowrap sm:gap-8 lg:gap-10">
-                {badgeImage && (
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-border bg-surface sm:h-20 sm:w-20">
-                    <Image
-                      src={badgeImage}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                      priority
-                    />
-                  </div>
-                )}
+          {/* Profile header: name + address, then gallery */}
+          <header className="mt-6 pb-6 sm:mt-8 sm:pb-8 border-b border-stone-200">
+            <h1 className="font-serif text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
+              {provider.name}
+            </h1>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <svg className="h-4 w-4 shrink-0 text-stone-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              {provider.address ? (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(provider.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50/80 px-3 py-1.5 text-sm font-medium text-accent transition-colors hover:border-accent/30 hover:bg-accent-soft/40 hover:text-accent-hover"
+                >
+                  {provider.address}
+                  <svg className="h-3.5 w-3.5 shrink-0 opacity-70" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                </a>
+              ) : (
+                <span className="text-sm text-stone-500 sm:text-base">{provider.locationCity}</span>
+              )}
+            </div>
+          </header>
 
-                <div className="min-w-0 flex-1 space-y-1 sm:flex-initial">
-                  <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-3xl lg:text-4xl">
-                    {provider.name}
-                  </h1>
-                  <p className="text-sm leading-relaxed text-muted sm:text-base">
-                    {provider.address ? (
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(provider.address)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-accent transition-colors"
-                      >
-                        {provider.address}
-                      </a>
-                    ) : (
-                      provider.locationCity
-                    )}
-                  </p>
-                </div>
+          <div className="mt-6 grid grid-cols-1 gap-8 pb-12 sm:mt-8 sm:pb-16 lg:mt-10 lg:grid-cols-[1fr_340px] lg:gap-12 lg:pb-16">
+            <div className="space-y-8 sm:space-y-10">
 
-                <div className="flex w-full flex-wrap items-center gap-2 border-t border-border pt-3 sm:w-auto sm:flex-col sm:items-start sm:gap-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8 lg:pl-10 sm:min-w-[180px]">
-                  <span className="rounded-md bg-accent-soft px-2 py-0.5 text-xs font-medium text-accent-hover">
-                    {categoryTitle}
-                  </span>
-                  {provider.subcategory && (
-                    <span className="text-xs text-muted sm:text-sm">{provider.subcategory}</span>
-                  )}
-                  {(provider.eventTypes ?? []).map((slug: string) => (
-                    <span
-                      key={slug}
-                      className="rounded-full bg-sage-soft px-2.5 py-0.5 text-xs font-medium text-sage sm:text-sm"
-                    >
-                      {eventLabel(slug as EventTypeSlug)}
-                    </span>
-                  ))}
-                </div>
-              </header>
-
-              {/* Gallery — first main section, visually dominant */}
+              {/* Gallery */}
               {hasGallery && (
-                <section aria-labelledby="galerija-heading">
-                  <h2 id="galerija-heading" className={SECTION_HEADING}>
+                <section aria-labelledby="galerija-heading" className="space-y-4">
+                  <h2 id="galerija-heading" className="text-xs font-semibold uppercase tracking-widest text-stone-500">
                     Galerija
                   </h2>
-                  <div className="space-y-5">
-                    {hasGalleryImages &&
-                      (galleryUrls.length >= 4 ? (
-                        <ProviderGalleryFeatured images={galleryUrls} />
-                      ) : (
-                        <ProviderGalleryLightbox images={galleryUrls} />
-                      ))}
-                    {hasVideos && (
+                  {hasGalleryImages &&
+                    (galleryUrls.length >= 4 ? (
+                      <ProviderGalleryFeatured images={galleryUrls} />
+                    ) : (
+                      <ProviderGalleryLightbox images={galleryUrls} />
+                    ))}
+                  {hasVideos && (
+                    <div className="pt-2">
                       <Gallery galleryImages={[]} videoLinks={videoLinks} />
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </section>
               )}
 
-              {/* Contact card (mobile only) — below gallery */}
+              {/* O nama */}
+              <section
+                className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-marketplace sm:p-8 lg:p-10"
+                aria-labelledby="opis-heading"
+              >
+                <h2 id="opis-heading" className="section-heading mb-4 !text-xl sm:!text-2xl lg:!text-3xl">
+                  O nama
+                </h2>
+                <div className="divider-ornament ml-0" />
+                <p className="whitespace-pre-wrap text-base leading-relaxed text-stone-500 font-light">
+                  {provider.description}
+                </p>
+              </section>
+
+              {/* Key details (wedding salons only) */}
+              {provider.category === "wedding_salon" &&
+                (() => {
+                  const details = (provider as { details?: unknown }).details;
+                  if (details && typeof details === "object" && !Array.isArray(details)) {
+                    return <ProviderDetailsSection details={details as ProviderDetails} />;
+                  }
+                  return null;
+                })()}
+
+              {/* Contact (mobile): after O nama / Detalji, before form */}
               <div className="lg:hidden">
                 <ProfileContactCard
                   phone={provider.phone}
                   email={provider.email}
                   website={provider.website}
                   address={provider.address}
-                  instagram={
-                    (provider.details as { instagram?: string })?.instagram
-                  }
-                  facebook={
-                    (provider.details as { facebook?: string })?.facebook
-                  }
+                  instagram={(provider.details as { instagram?: string })?.instagram}
+                  facebook={(provider.details as { facebook?: string })?.facebook}
                 />
               </div>
 
-              {/* About provider */}
-              <section
-                className="rounded-2xl border border-border bg-white p-6"
-                aria-labelledby="opis-heading"
-              >
-                <h2 id="opis-heading" className={SECTION_HEADING}>
-                  O pružatelju
-                </h2>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted">
-                  {provider.description}
-                </p>
-              </section>
-
-              {/* Key details (wedding salons) */}
-              {provider.category === "wedding_salon" &&
-                (() => {
-                  const details = (provider as { details?: unknown }).details;
-                  if (
-                    details &&
-                    typeof details === "object" &&
-                    !Array.isArray(details)
-                  ) {
-                    return (
-                      <ProviderDetailsSection
-                        details={details as ProviderDetails}
-                      />
-                    );
-                  }
-                  return null;
-                })()}
-
-              {/* Inquiry form */}
+              {/* Pošaljite upit — single section, form has no duplicate title */}
               <section
                 id="upit"
-                className="scroll-mt-24"
+                className="scroll-mt-28 rounded-2xl border border-stone-200/80 bg-white p-6 shadow-marketplace sm:p-8 lg:p-10"
                 aria-labelledby="upit-heading"
               >
-                <h2 id="upit-heading" className={SECTION_HEADING}>
-                  Pošalji upit
+                <h2 id="upit-heading" className="section-heading mb-1 !text-xl sm:!text-2xl lg:!text-3xl">
+                  Pošaljite upit
                 </h2>
-                <LeadForm
-                  providerId={provider.id}
-                  providerName={provider.name}
-                />
+                <p className="mb-6 text-sm text-stone-500">Ispunite formu ispod; pružatelj će vam se javiti u najkraćem roku.</p>
+                <LeadForm providerId={provider.id} providerName={provider.name} />
               </section>
 
-              {/* Similar providers */}
+              {/* Slični stručnjaci */}
               {similar.length > 0 && (
-                <section aria-labelledby="slicni-heading">
-                  <h2 id="slicni-heading" className={SECTION_HEADING}>
-                    Slični pružaoci
+                <section aria-labelledby="slicni-heading" className="pt-4 sm:pt-6">
+                  <h2 id="slicni-heading" className="section-heading mb-6 !text-xl sm:!text-2xl lg:!text-3xl">
+                    Slični stručnjaci u blizini
                   </h2>
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {similar.map((p) => (
@@ -364,32 +314,23 @@ export default async function ProfilePage({ params }: PageProps) {
               )}
             </div>
 
-            {/* Right: sticky contact card (desktop only) */}
-            <aside className="hidden h-fit lg:block lg:sticky lg:top-24">
+            {/* Sticky contact (desktop only) */}
+            <aside className="hidden h-fit lg:block lg:sticky lg:top-28">
               <ProfileContactCard
                 phone={provider.phone}
                 email={provider.email}
                 website={provider.website}
                 address={provider.address}
-                instagram={
-                  (provider.details as { instagram?: string })?.instagram
-                }
+                instagram={(provider.details as { instagram?: string })?.instagram}
                 facebook={(provider.details as { facebook?: string })?.facebook}
               />
             </aside>
           </div>
         </div>
-      </main>
 
-      {/* Mobile CTA bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-border bg-white/80 p-4 backdrop-blur-xl sm:hidden">
-        <a
-          href="#upit"
-          className="btn-primary block w-full py-3.5 text-center text-sm"
-        >
-          Pošalji upit
-        </a>
-      </div>
+        {/* Boundary before footer */}
+        <div className="border-t border-stone-200 bg-stone-50/50" aria-hidden />
+      </main>
 
       <SiteFooter />
     </div>

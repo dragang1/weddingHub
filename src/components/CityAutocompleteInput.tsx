@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, useCallback, forwardRef } from "react";
-import { filterCitiesForAutocomplete } from "@/lib/cities";
+import { filterCitiesForAutocomplete, KNOWN_CITY_NAMES } from "@/lib/cities";
 
 const SUGGESTIONS_LIMIT = 8;
 const BLUR_DELAY_MS = 150;
@@ -39,11 +39,12 @@ export const CityAutocompleteInput = forwardRef<
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const suggestions = useMemo(
-    () => filterCitiesForAutocomplete(value, undefined, SUGGESTIONS_LIMIT),
-    [value]
-  );
-  const showDropdown = isOpen && value.trim().length >= 1;
+  const suggestions = useMemo(() => {
+    const q = value.trim();
+    if (!q) return KNOWN_CITY_NAMES;
+    return filterCitiesForAutocomplete(value, undefined, SUGGESTIONS_LIMIT);
+  }, [value]);
+  const showDropdown = isOpen && suggestions.length > 0;
 
   const closeDropdown = useCallback(() => {
     setIsOpen(false);

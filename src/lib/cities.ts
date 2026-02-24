@@ -156,6 +156,7 @@ export function filterCitiesForAutocomplete(
 
 /**
  * Resolve user city input to canonical URL slug.
+ * Samo gradovi iz liste (KNOWN_CITIES). Nepoznat grad → "".
  * "banjaluka", "Banja Luka", "banja-luka" → "banja-luka"
  */
 export function cityInputToCanonicalSlug(input: string): string {
@@ -165,8 +166,29 @@ export function cityInputToCanonicalSlug(input: string): string {
   const compact = compactSlug(trimmed);
   if (!compact) return "";
   const slug = COMPACT_TO_SLUG.get(compact);
-  if (slug) return slug;
-  return slugifyCity(trimmed);
+  return slug ?? "";
+}
+
+/** Kratki aliasi za gradove (npr. "sa" → Sarajevo) za search. */
+const CITY_ALIASES: Record<string, string> = {
+  sa: "Sarajevo",
+  bl: "Banja Luka",
+};
+
+/**
+ * Resolve token(s) to known city display name for search parsing.
+ * Returns display name (e.g. "Bugojno") only if input matches a known city; otherwise null.
+ */
+export function resolveCityDisplayName(input: string): string | null {
+  if (!input || typeof input !== "string") return null;
+  const trimmed = input.trim().toLowerCase();
+  if (!trimmed) return null;
+  const alias = CITY_ALIASES[stripDiacritics(trimmed)];
+  if (alias) return alias;
+  const slug = cityInputToCanonicalSlug(trimmed);
+  if (!slug) return null;
+  const known = KNOWN_CITIES.find((c) => c.slug === slug);
+  return known ? known.name : null;
 }
 
 /**

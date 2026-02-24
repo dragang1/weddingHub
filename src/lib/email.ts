@@ -33,7 +33,7 @@ export async function sendLeadEmail({
 
   const subject = `Novi upit — ${provider.name} (${lead.eventCity}, ${formatDate(lead.eventDate)})`;
   const body = `
-Novi upit s WeddingHub stranice.
+Novi upit s EventHub stranice.
 
 Pružatelj: ${provider.name}
 Kategorija: ${provider.category}

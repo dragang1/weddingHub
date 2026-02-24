@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { CategoryCityResults } from "@/components/CategoryCityResults";
 import { cityInputToCanonicalSlug } from "@/lib/cities";
 
@@ -11,6 +11,7 @@ type Props = {
 
 export default async function SvadbeniSalonCityPage({ params, searchParams }: Props) {
   const { city: citySlug } = await params;
+  if (citySlug === "sve") notFound();
   const sp = await searchParams;
   const canonical = cityInputToCanonicalSlug(citySlug);
   if (canonical && canonical !== citySlug) {

@@ -53,20 +53,20 @@ export default async function CategoryPage({
   const headingPrefix = eventHeadingPrefix(eventType);
 
   return (
-    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-surface">
+    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream">
       <SiteHeader />
       <main className="min-w-0 flex-1">
         {/* Page header */}
-        <header className="border-b border-border bg-white">
-          <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 md:px-8">
-            <nav className="flex flex-wrap items-center gap-x-2 text-sm text-muted" aria-label="Breadcrumb">
+        <header className="border-b border-stone-200 bg-white/80 backdrop-blur-sm">
+          <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 md:px-8">
+            <nav className="flex flex-wrap items-center gap-x-2 text-sm text-stone-500" aria-label="Breadcrumb">
               <Link
                 href="/"
                 className="transition-colors hover:text-accent"
               >
                 Početna
               </Link>
-              <span className="text-border">/</span>
+              <span className="text-stone-300">/</span>
               <span className="font-medium text-ink break-words">
                 {categoryTitle}
               </span>
@@ -77,26 +77,26 @@ export default async function CategoryPage({
           </div>
         </header>
 
-        <div className="mx-auto w-full max-w-6xl min-w-0 px-4 py-8 sm:px-6 sm:py-10 md:px-8 md:py-14">
-          <div className="max-w-md space-y-6 sm:space-y-8">
+        <div className="mx-auto w-full max-w-7xl min-w-0 px-5 py-12 sm:px-8 sm:py-16 md:py-24">
+          <div className="max-w-xl space-y-8 sm:space-y-10">
             {/* Category confirmation card */}
-            <div className="card p-4 sm:p-6">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-ink/80">
-                  <CategoryIcon slug={slug} className="h-6 w-6" strokeWidth={1.75} />
+            <div className="rounded-2xl border border-stone-200/80 bg-white p-6 sm:p-8 shadow-marketplace">
+              <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-soft border border-accent/20 text-accent transition-colors duration-500">
+                  <CategoryIcon slug={slug} className="h-6 w-6" strokeWidth={1.5} />
                 </span>
                 <div className="min-w-0">
-                  <p className="section-label text-accent">Odabrali ste</p>
-                  <p className="mt-1 font-serif text-lg font-bold text-ink break-words">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">Odabrano</p>
+                  <p className="font-serif text-2xl font-bold text-ink break-words">
                     {categoryTitle}
                   </p>
-                  <p className="mt-1.5 text-sm text-muted">{description}</p>
+                  <p className="mt-2 text-base text-stone-500 font-light leading-relaxed">{description}</p>
                   <Link
                     href="/#kategorije"
-                    className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-accent transition-colors hover:text-accent-hover focus:outline-none focus:ring-2 focus:ring-accent/20 focus:ring-offset-2 rounded"
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors hover:text-accent focus:outline-none"
                   >
                     <svg
-                      className="h-3.5 w-3.5 shrink-0"
+                      className="h-4 w-4 shrink-0 transition-transform hover:-translate-x-1"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth={2}
@@ -108,7 +108,7 @@ export default async function CategoryPage({
                         d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
                       />
                     </svg>
-                    Promijeni kategoriju
+                    Druga kategorija
                   </Link>
                 </div>
               </div>
@@ -119,20 +119,21 @@ export default async function CategoryPage({
               categoryLabel={categoryTitle}
               categoryPath={path}
               eventType={eventType}
+              allowShowAll={slug !== "wedding_salon"}
             />
 
             {/* Info hint */}
-            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted sm:gap-6">
-              <span className="flex items-center gap-1.5">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-accent/40" />
+            <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-semibold uppercase tracking-widest text-stone-400">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/40" />
                 Odaberi uslugu
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-accent/40" />
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/40" />
                 Unesi grad
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-accent/40" />
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/40" />
                 Kontaktiraj
               </span>
             </div>

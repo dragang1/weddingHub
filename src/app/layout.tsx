@@ -15,9 +15,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Wedding Hub — Pružaoci usluga za vjenčanje",
+  title: "Event Hub — Pružaoci usluga za vjenčanje",
   description:
-    "Pronađi provjerene pružaoce usluga za vjenčanje: muzika, fotografija, dekoracija, torte i više.",
+    "Pronađite pružaoce usluga za vjenčanje i događaje. Muzika, fotografija, sale, torte i više.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="hr" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-surface font-sans antialiased">
+      <body className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream font-sans antialiased text-ink">
         {children}
       </body>
     </html>

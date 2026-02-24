@@ -27,19 +27,19 @@ export const CATEGORIES: CategoryConfig[] = [
     slug: "music",
     label: "Muzika",
     path: "/muzika",
-    description: "Bendovi i DJ-evi za nezaboravnu atmosferu.",
+    description: "Bendovi i DJ-evi.",
   },
   {
     slug: "photo_video",
     label: "Fotografija i video",
     path: "/fotografija",
-    description: "Fotografi i video timovi za vaš dan.",
+    description: "Fotografi i snimanje videa.",
   },
   {
     slug: "wedding_salon",
     label: "Svadbeni salon",
     path: "/svadbeni-salon",
-    description: "Sale, restorani i prostori za proslavu.",
+    description: "Sale i restorani za proslave.",
   },
   {
     slug: "cakes",
@@ -51,7 +51,7 @@ export const CATEGORIES: CategoryConfig[] = [
     slug: "decoration",
     label: "Dekoracija",
     path: "/dekoracija",
-    description: "Cvijeće, dekor i kompletan ambijent.",
+    description: "Cvijeće i dekoracija.",
   },
   {
     slug: "transport",
@@ -63,7 +63,7 @@ export const CATEGORIES: CategoryConfig[] = [
     slug: "beauty",
     label: "Ljepota",
     path: "/ljepota",
-    description: "Frizura, šminka i beauty usluge.",
+    description: "Frizura i šminka.",
   },
 ];
 

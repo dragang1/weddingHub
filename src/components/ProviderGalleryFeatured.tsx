@@ -76,19 +76,20 @@ export function ProviderGalleryFeatured({
   return (
     <>
       {/* Featured + grid layout */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:grid-rows-2 lg:gap-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4 lg:grid-rows-2 lg:gap-4">
         {/* Large featured (desktop) / first image (mobile) */}
         <button
           type="button"
           onClick={() => openAt(0)}
-          className="relative col-span-2 row-span-2 aspect-[4/3] overflow-hidden rounded-2xl bg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 lg:aspect-auto"
+          className="relative col-span-2 row-span-2 aspect-[4/3] sm:aspect-video lg:aspect-auto overflow-hidden rounded-2xl bg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 group"
           aria-label={`Pogledaj sliku 1 od ${images.length}`}
         >
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors z-10 duration-500" />
           <Image
             src={featured}
             alt="Naslovna fotografija"
             fill
-            className="object-cover transition-transform duration-300 hover:scale-105"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             sizes="(max-width: 1024px) 100vw, 66vw"
           />
         </button>
@@ -99,14 +100,15 @@ export function ProviderGalleryFeatured({
             key={i}
             type="button"
             onClick={() => openAt(i + 1)}
-            className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+            className="relative aspect-square sm:aspect-[4/3] overflow-hidden rounded-2xl bg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 group"
             aria-label={`Pogledaj sliku ${i + 2} od ${images.length}`}
           >
+             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors z-10 duration-500" />
             <Image
               src={url}
               alt={`Galerija ${i + 2}`}
               fill
-              className="object-cover transition-transform duration-300 hover:scale-105"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
               sizes="(max-width: 1024px) 50vw, 25vw"
             />
           </button>

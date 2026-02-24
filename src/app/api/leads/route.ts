@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
   }
 
   const text = `
-Novi upit – WeddingHub
+Novi upit – EventHub
 
 Pružatelj: ${data.providerName}
 ID: ${data.providerId}
@@ -159,7 +159,7 @@ Poslano: ${timestamp}
 <html>
 <head><meta charset="utf-8"></head>
 <body style="font-family:sans-serif;font-size:14px;line-height:1.6;color:#333;max-width:560px;">
-  <h2 style="font-size:18px;margin-bottom:12px;">Novi upit – WeddingHub</h2>
+  <h2 style="font-size:18px;margin-bottom:12px;">Novi upit – EventHub</h2>
   <p><strong>Pružatelj:</strong> ${escapeHtml(data.providerName)}</p>
   <p><strong>ID:</strong> ${escapeHtml(data.providerId)}</p>
   ${pageUrl ? `<p><strong>URL:</strong> <a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>` : ""}
@@ -181,7 +181,7 @@ Poslano: ${timestamp}
       from,
       to: adminEmail,
       replyTo: data.email?.trim() || undefined,
-      subject: `Novi upit – ${data.providerName} – WeddingHub`,
+      subject: `Novi upit – ${data.providerName} – EventHub`,
       text,
       html,
     });

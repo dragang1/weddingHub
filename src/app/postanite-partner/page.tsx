@@ -107,37 +107,48 @@ export default function PostanitePartnerPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface">
+    <div className="min-h-screen flex flex-col bg-cream">
       <SiteHeader />
-      <main className="flex-1 px-4 py-12 sm:px-6 sm:py-16">
-        <div className="mx-auto min-w-0 max-w-xl">
-          <h1 className="font-serif text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-            Dodajte svoj biznis
-          </h1>
-          <p className="mt-3 text-base leading-relaxed text-muted sm:text-lg">
-            Imate biznis vezan za proslave i događaje? Pošaljite nam svoje
-            podatke i kontaktiraćemo vas.
-          </p>
+      <main className="flex-1 relative px-5 py-16 sm:px-8 sm:py-24">
+        <div className="absolute inset-0 section-pattern opacity-50 pointer-events-none" aria-hidden />
+        <div className="relative mx-auto min-w-0 max-w-2xl">
+          <div className="text-center mb-12">
+            <span className="text-xs font-semibold uppercase tracking-widest text-accent mb-4 block">Partnerstvo</span>
+            <h1 className="font-serif text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+              Postanite dio mreže
+            </h1>
+            <p className="mt-4 text-lg font-light leading-relaxed text-stone-500 max-w-lg mx-auto">
+              Pridružite se ekskluzivnoj platformi i predstavite svoje usluge klijentima koji traže najbolje za svoje vjenčanje.
+            </p>
+          </div>
 
           {status === "cooldown" ? (
-            <div className="mt-10 rounded-2xl border border-border bg-white p-8 text-center">
-              <p className="font-semibold text-ink">
-                Hvala! Kontaktiraćemo vas uskoro.
+            <div className="mt-10 rounded-2xl border border-stone-200 bg-white p-10 text-center shadow-marketplace">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent mb-6">
+                <svg className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <p className="font-serif text-2xl font-bold text-ink">
+                Zahtjev je uspješno poslan
               </p>
-              <p className="mt-2 text-sm text-muted">
-                Možete poslati novi zahtjev za {cooldownSec} sekundi.
+              <p className="mt-3 text-base text-stone-500 font-light">
+                Hvala vam na interesu. Naš tim će vas uskoro kontaktirati sa daljim informacijama.
+              </p>
+              <p className="mt-6 text-sm text-stone-400 uppercase tracking-widest font-semibold">
+                Novi zahtjev moguć za {cooldownSec}s
               </p>
             </div>
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="mt-10 min-w-0 rounded-2xl border border-border bg-white p-6 shadow-card sm:p-8"
+              className="mt-8 rounded-2xl border border-stone-200 bg-white p-8 shadow-marketplace sm:p-10"
             >
-              <div className="min-w-0 space-y-5">
+              <div className="min-w-0 space-y-6">
                 <div>
                   <label
                     htmlFor="businessName"
-                    className="mb-1.5 block text-sm font-semibold text-ink"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                   >
                     Naziv biznisa *
                   </label>
@@ -147,13 +158,13 @@ export default function PostanitePartnerPage() {
                     type="text"
                     required
                     className="input-field w-full"
-                    placeholder="npr. Muzički studio XYZ"
+                    placeholder="npr. Studio Elegance"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="category"
-                    className="mb-1.5 block text-sm font-semibold text-ink"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                   >
                     Kategorija *
                   </label>
@@ -161,9 +172,9 @@ export default function PostanitePartnerPage() {
                     id="category"
                     name="category"
                     required
-                    className="input-field w-full"
+                    className="input-field w-full appearance-none"
                   >
-                    <option value="">Odaberite kategoriju</option>
+                    <option value="">Odaberite kategoriju usluge</option>
                     {CATEGORIES.map((c) => (
                       <option key={c.slug} value={c.slug}>
                         {c.label}
@@ -174,7 +185,7 @@ export default function PostanitePartnerPage() {
                 <div>
                   <label
                     htmlFor="city"
-                    className="mb-1.5 block text-sm font-semibold text-ink"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                   >
                     Grad *
                   </label>
@@ -185,7 +196,7 @@ export default function PostanitePartnerPage() {
                     required
                     list="city-list"
                     className="input-field w-full"
-                    placeholder="npr. Sarajevo"
+                    placeholder="Glavni grad poslovanja"
                   />
                   <datalist id="city-list">
                     {POPULAR_CITY_NAMES.map((c) => (
@@ -193,11 +204,11 @@ export default function PostanitePartnerPage() {
                     ))}
                   </datalist>
                 </div>
-                <div className="grid min-w-0 gap-5 sm:grid-cols-2">
+                <div className="grid min-w-0 gap-6 sm:grid-cols-2">
                   <div>
                     <label
                       htmlFor="contactName"
-                      className="mb-1.5 block text-sm font-semibold text-ink"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                     >
                       Ime i prezime *
                     </label>
@@ -212,7 +223,7 @@ export default function PostanitePartnerPage() {
                   <div>
                     <label
                       htmlFor="phone"
-                      className="mb-1.5 block text-sm font-semibold text-ink"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                     >
                       Telefon *
                     </label>
@@ -228,7 +239,7 @@ export default function PostanitePartnerPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-1.5 block text-sm font-semibold text-ink"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                   >
                     Email *
                   </label>
@@ -240,11 +251,11 @@ export default function PostanitePartnerPage() {
                     className="input-field w-full"
                   />
                 </div>
-                <div className="grid min-w-0 gap-5 sm:grid-cols-3">
+                <div className="grid min-w-0 gap-6 sm:grid-cols-3 pt-4 border-t border-stone-100">
                   <div>
                     <label
                       htmlFor="instagram"
-                      className="mb-1.5 block text-sm font-semibold text-ink"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                     >
                       Instagram
                     </label>
@@ -253,13 +264,13 @@ export default function PostanitePartnerPage() {
                       name="instagram"
                       type="text"
                       className="input-field w-full"
-                      placeholder="opcionalno"
+                      placeholder="@"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="facebook"
-                      className="mb-1.5 block text-sm font-semibold text-ink"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                     >
                       Facebook
                     </label>
@@ -268,13 +279,13 @@ export default function PostanitePartnerPage() {
                       name="facebook"
                       type="text"
                       className="input-field w-full"
-                      placeholder="opcionalno"
+                      placeholder="link ili ime"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="website"
-                      className="mb-1.5 block text-sm font-semibold text-ink"
+                      className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                     >
                       Web stranica
                     </label>
@@ -283,23 +294,23 @@ export default function PostanitePartnerPage() {
                       name="website"
                       type="url"
                       className="input-field w-full"
-                      placeholder="opcionalno"
+                      placeholder="https://"
                     />
                   </div>
                 </div>
-                <div>
+                <div className="pt-4 border-t border-stone-100">
                   <label
                     htmlFor="message"
-                    className="mb-1.5 block text-sm font-semibold text-ink"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-widest text-stone-600"
                   >
-                    Poruka
+                    Dodatne informacije
                   </label>
                   <textarea
                     id="message"
                     name="message"
-                    rows={3}
+                    rows={4}
                     className="input-field w-full resize-y"
-                    placeholder="Opcionalno — recite nam nešto o svom biznisu"
+                    placeholder="Kratki opis vaših usluga (opcionalno)"
                   />
                 </div>
                 <div className="sr-only" aria-hidden>
@@ -315,23 +326,23 @@ export default function PostanitePartnerPage() {
               </div>
 
               {errorMsg && (
-                <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+                <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4">
                   <p className="text-sm text-red-700" role="alert">
                     {errorMsg}
                   </p>
                 </div>
               )}
 
-              <div className="mt-8">
+              <div className="mt-10 pt-6 border-t border-stone-100">
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="btn-primary w-full sm:w-auto sm:px-8"
+                  className="btn-accent w-full py-4 text-base rounded-xl"
                 >
                   {status === "loading" ? (
                     <span className="flex items-center justify-center gap-2">
                       <svg
-                        className="h-4 w-4 animate-spin"
+                        className="h-5 w-5 animate-spin"
                         fill="none"
                         viewBox="0 0 24 24"
                       >
@@ -349,7 +360,7 @@ export default function PostanitePartnerPage() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                         />
                       </svg>
-                      Šaljem…
+                      Šaljem zahtjev…
                     </span>
                   ) : (
                     "Pošalji zahtjev"
@@ -359,14 +370,17 @@ export default function PostanitePartnerPage() {
             </form>
           )}
 
-          <p className="mt-8 text-center">
+          <div className="mt-12 text-center">
             <Link
               href="/"
-              className="text-sm font-medium text-accent hover:text-accent-hover"
+              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-stone-500 hover:text-ink transition-colors"
             >
-              ← Nazad na početnu
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+              Nazad na početnu
             </Link>
-          </p>
+          </div>
         </div>
       </main>
       <SiteFooter />

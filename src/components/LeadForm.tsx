@@ -60,7 +60,7 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
     const message = (form.querySelector('[name="message"]') as HTMLTextAreaElement)?.value?.trim();
 
     if (!name || !message || message.length < 20) {
-      setErrorMsg("Ime i poruka (min. 20 znakova) su obavezni.");
+      setErrorMsg("Upišite ime i poruku (najmanje 20 znakova).");
       return;
     }
 
@@ -87,7 +87,7 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
 
       if (!res.ok) {
         setStatus("idle");
-        setErrorMsg(json.error ?? "Greška");
+        setErrorMsg(json.error ?? "Nešto nije u redu. Pokušajte ponovo.");
         return;
       }
 
@@ -99,17 +99,17 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
       setCooldownSec(COOLDOWN_SEC);
     } catch {
       setStatus("idle");
-      setErrorMsg("Greška u mreži. Pokušaj ponovo.");
+      setErrorMsg("Nešto nije u redu. Pokušajte ponovo.");
     }
   }
 
   if (status === "cooldown" && cooldownSec > 0) {
     return (
-      <div className="rounded-2xl border border-border bg-white shadow-card overflow-hidden">
+      <div className="rounded-2xl border border-stone-200 bg-white shadow-marketplace overflow-hidden">
         <div className="bg-accent-soft/50 p-8 text-center sm:p-10">
-          <p className="font-medium text-ink">Hvala! Upit je poslan.</p>
-          <p className="mt-2 text-sm text-muted">
-            Možeš poslati novi upit za {cooldownSec} sekundi.
+          <p className="font-medium text-ink">Hvala. Upit je poslan.</p>
+          <p className="mt-2 text-sm text-stone-500">
+            Novi upit možete poslati za {cooldownSec} sekundi.
           </p>
         </div>
       </div>
@@ -117,53 +117,50 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="min-w-0 rounded-2xl border border-border bg-white shadow-card overflow-hidden">
-      <div className="bg-accent-soft/30 px-6 py-5 sm:px-8">
-        <h3 className="font-serif text-xl font-bold text-ink">Pošalji upit</h3>
-        <p className="mt-1 text-sm text-muted">Kontaktirajte {providerName}.</p>
-      </div>
-
-      <div className="min-w-0 space-y-4 p-6 sm:p-8">
+    <form onSubmit={handleSubmit} className="min-w-0">
+      <div className="space-y-5 sm:space-y-6">
         <div>
-          <label htmlFor="lead-name" className="mb-1.5 block text-xs font-semibold text-muted">
-            Ime i prezime *
+          <label htmlFor="lead-name" className="mb-1.5 block text-sm font-medium text-ink">
+            Ime i prezime <span className="text-stone-400">*</span>
           </label>
           <input
             id="lead-name"
             name="name"
             type="text"
             required
-            className="input-field w-full"
+            className="input-field w-full rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
             placeholder="npr. Ana Horvat"
           />
         </div>
-        <div>
-          <label htmlFor="lead-email" className="mb-1.5 block text-xs font-semibold text-muted">
-            Email
-          </label>
-          <input
-            id="lead-email"
-            name="email"
-            type="email"
-            className="input-field w-full"
-            placeholder="opcionalno"
-          />
+        <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+          <div>
+            <label htmlFor="lead-email" className="mb-1.5 block text-sm font-medium text-ink">
+              Email
+            </label>
+            <input
+              id="lead-email"
+              name="email"
+              type="email"
+              className="input-field w-full rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+              placeholder="opcionalno"
+            />
+          </div>
+          <div>
+            <label htmlFor="lead-phone" className="mb-1.5 block text-sm font-medium text-ink">
+              Telefon
+            </label>
+            <input
+              id="lead-phone"
+              name="phone"
+              type="tel"
+              className="input-field w-full rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+              placeholder="opcionalno"
+            />
+          </div>
         </div>
         <div>
-          <label htmlFor="lead-phone" className="mb-1.5 block text-xs font-semibold text-muted">
-            Telefon
-          </label>
-          <input
-            id="lead-phone"
-            name="phone"
-            type="tel"
-            className="input-field w-full"
-            placeholder="opcionalno"
-          />
-        </div>
-        <div>
-          <label htmlFor="lead-message" className="mb-1.5 block text-xs font-semibold text-muted">
-            Poruka * (min. 20 znakova)
+          <label htmlFor="lead-message" className="mb-1.5 block text-sm font-medium text-ink">
+            Poruka <span className="text-stone-400">*</span> <span className="text-xs font-normal text-stone-500">(min. 20 znakova)</span>
           </label>
           <textarea
             id="lead-message"
@@ -171,25 +168,25 @@ export function LeadForm({ providerId, providerName }: LeadFormProps) {
             rows={4}
             required
             minLength={20}
-            className="input-field w-full resize-y"
-            placeholder="Opišite šta vam treba..."
+            className="input-field w-full resize-y rounded-xl border-stone-200 bg-stone-50/50 py-3 transition-colors focus:bg-white"
+            placeholder="Opišite šta vam treba, datum događaja, broj gostiju..."
           />
         </div>
       </div>
 
       {errorMsg && (
-        <div className="mx-6 mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 sm:mx-8">
+        <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 sm:mt-6">
           <p className="text-sm text-red-700" role="alert">
             {errorMsg}
           </p>
         </div>
       )}
 
-      <div className="border-t border-border px-6 py-5 sm:px-8">
+      <div className="mt-6 pt-6 border-t border-stone-200">
         <button
           type="submit"
           disabled={status === "loading"}
-          className="btn-primary w-full sm:w-auto"
+          className="btn-primary w-full rounded-xl py-3.5 text-base font-medium sm:w-auto sm:px-8"
         >
           {status === "loading" ? (
             <span className="flex items-center justify-center gap-2">

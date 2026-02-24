@@ -1,90 +1,105 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { CATEGORIES } from "@/lib/categories";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CategoryCard } from "@/components/CategoryCard";
+import { PlatformAnimation } from "@/components/PlatformAnimation";
 
 export const dynamic = "force-dynamic";
 
 export default function Home() {
   const categorySectionRef = useRef<HTMLDivElement>(null);
-  const [howItWorksOpen, setHowItWorksOpen] = useState(false);
 
   const scrollToCategories = useCallback(() => {
     categorySectionRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   return (
-    <main className="min-h-screen flex flex-col bg-surface">
+    <main className="min-h-screen flex flex-col bg-cream">
       <SiteHeader />
 
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        {/* Decorative background — reduced blur on mobile for performance */}
+      <section className="relative overflow-hidden pt-24 pb-20 md:pt-32 md:pb-28 lg:pt-40 lg:pb-36 section-pattern">
+        {/* Decorative orbs */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-accent/[0.05] blur-2xl sm:h-96 sm:w-96 sm:blur-3xl" />
-          <div className="absolute top-1/2 -left-32 h-56 w-56 rounded-full bg-rose/[0.05] blur-2xl sm:-left-48 sm:h-80 sm:w-80 sm:blur-3xl" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px w-2/3 bg-gradient-to-r from-transparent via-border to-transparent" />
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-stone-200/40 via-transparent to-transparent opacity-80 blur-3xl" />
+          <div className="absolute bottom-[-10%] right-[-5%] w-[45%] h-[45%] rounded-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-accent/12 via-transparent to-transparent opacity-90 blur-3xl" />
+          <div className="absolute inset-0 grain-overlay" aria-hidden />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-14 md:py-20 lg:py-28">
-          <div className="max-w-2xl">
-            {/* Pill badge */}
-            <p className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent-soft/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[0.15em]">
-              <span className="h-1 w-1 rounded-full bg-accent sm:h-1.5 sm:w-1.5" />
-              Vaš vodič kroz savršen dan
-            </p>
+        <div className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-10 items-center">
+            
+            {/* Text Content */}
+            <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:col-span-6 xl:col-span-5 relative z-10">
+              {/* Premium Pill Badge */}
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-stone-200/80 bg-white/60 backdrop-blur-md px-4 py-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] mb-8 animate-fade-in-up">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-60"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                </span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/80">
+                  Platforma za događaje u BiH
+                </span>
+              </div>
 
-            <h1 className="mt-3 font-serif text-3xl font-bold leading-[1.15] tracking-tight text-ink sm:mt-5 sm:text-4xl sm:leading-[1.1] md:text-5xl lg:text-6xl">
-              Sve za vaše vjenčanje —{" "}
-              <span className="text-accent">na jednom mjestu.</span>
-            </h1>
+              <h1 className="font-serif text-[42px] leading-[1.05] tracking-tight text-ink sm:text-6xl md:text-[68px] animate-fade-in-up [animation-delay:100ms] opacity-0">
+                Pronađite pružaoce usluga<br className="hidden lg:block"/> za vjenčanje i događaje.
+              </h1>
 
-            <p className="mt-3 text-[15px] leading-relaxed text-muted sm:mt-4 sm:text-base md:max-w-lg md:text-lg">
-              Odaberite uslugu i grad događaja. Pronađite provjerene ponuđače i
-              kontaktirajte ih direktno.
-            </p>
+              <p className="mt-8 text-[17px] leading-relaxed text-stone-500 sm:text-[19px] max-w-xl animate-fade-in-up [animation-delay:200ms] opacity-0 font-light">
+                Muzika, fotografija, sale, torte, dekoracija i više. Pretražite po gradu i kategoriji.
+              </p>
 
-            {/* Primary CTA */}
-            <div className="mt-6 sm:mt-8">
-              <button
-                type="button"
-                onClick={scrollToCategories}
-                className="btn-primary w-full rounded-full px-6 py-3.5 text-base shadow-glow sm:w-auto sm:px-8"
-              >
-                Pronađite usluge
-              </button>
+              {/* CTAs */}
+              <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start animate-fade-in-up [animation-delay:300ms] opacity-0 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={scrollToCategories}
+                  className="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-ink px-8 py-4 text-sm font-medium text-white shadow-marketplace-hover transition-transform hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
+                >
+                  <span className="absolute inset-0 bg-white/20 translate-y-full transition-transform group-hover:translate-y-0" />
+                  <span className="relative">Pretraži usluge</span>
+                  <svg className="relative w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+                <a
+                  href="#kako-funkcionise"
+                  className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-stone-500 px-6 py-4 w-full sm:w-auto"
+                >
+                  Kako radi
+                </a>
+              </div>
+
+              {/* Trust indicator (avatar group) */}
+              <div className="mt-14 pt-8 border-t border-stone-200/60 flex items-center gap-5 animate-fade-in-up [animation-delay:400ms] opacity-0">
+                <div className="flex -space-x-3">
+                  <img className="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="" />
+                  <img className="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100" alt="" />
+                  <img className="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" alt="" />
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full ring-2 ring-white bg-stone-100 text-xs font-bold text-stone-600">
+                    500+
+                  </div>
+                </div>
+                <div className="text-sm font-medium text-stone-500 leading-tight">
+                  Preko 500 rezervacija.
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Trust — subtle cards */}
-          <div className="mt-8 grid grid-cols-1 gap-2.5 sm:mt-10 sm:grid-cols-3 sm:gap-3">
-            <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-white/60 px-4 py-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/60 text-accent">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </span>
-              <span className="text-sm text-muted">Provjereni ponuđači</span>
-            </div>
-            <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-white/60 px-4 py-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/60 text-accent">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </span>
-              <span className="text-sm text-muted">Više gradova</span>
-            </div>
-            <div className="flex items-center gap-3 rounded-xl border border-border/40 bg-white/60 px-4 py-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft/60 text-accent">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </span>
-              <span className="text-sm text-muted">Brzo slanje upita</span>
+            {/* Animation / Video Container */}
+            <div className="w-full max-w-[420px] mx-auto lg:max-w-none lg:col-span-6 xl:col-span-7 relative animate-fade-in-up [animation-delay:500ms] opacity-0 flex justify-center lg:justify-end perspective-1000">
+              
+              {/* Premium Glow behind the app window */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-accent/20 blur-[100px] rounded-full" />
+              
+              {/* The actual platform animation component */}
+              <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/3] max-h-[600px] rounded-marketplace-lg overflow-hidden shadow-marketplace-hover border border-stone-200/60 bg-white">
+                <PlatformAnimation />
+              </div>
             </div>
           </div>
         </div>
@@ -93,122 +108,55 @@ export default function Home() {
       {/* ── How it works ───────────────────────────────────────── */}
       <section
         id="kako-funkcionise"
-        className="relative border-t border-border/60 bg-accent-soft/25"
+        className="relative py-24 sm:py-32 bg-white border-y border-stone-200/50"
       >
-        <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
-          <button
-            type="button"
-            onClick={() => setHowItWorksOpen((o) => !o)}
-            className="flex w-full flex-col items-center py-4 text-center group"
-            aria-expanded={howItWorksOpen}
-          >
-            <p className="section-label text-accent/90">Kako funkcioniše</p>
-            <h2 className="mt-2 font-serif text-lg font-bold tracking-tight text-ink sm:text-xl">
+        <div className="absolute inset-0 section-pattern opacity-40" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24">
+            <p className="section-label">Kako radi</p>
+            <h2 className="mt-4 section-heading">
               Tri jednostavna koraka
             </h2>
-            <span className="mt-4 flex items-center gap-2 text-sm font-medium text-muted group-hover:text-ink transition-colors">
-              {howItWorksOpen ? "Zatvori" : "Klikni za detalje"}
-              <svg
-                className={`h-5 w-5 transition-transform ${howItWorksOpen ? "rotate-180" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </span>
-          </button>
+            <div className="divider-ornament" />
+          </div>
 
-          {howItWorksOpen && (
-          <div className="grid gap-6 pt-4 sm:grid-cols-3 sm:gap-6 lg:gap-8">
+          <div className="grid gap-8 sm:grid-cols-3 sm:gap-6 lg:gap-10">
             {[
               {
                 num: "01",
-                title: "Odaberite uslugu",
-                desc: "Izaberite kategoriju koja vam treba — od muzike do dekoracije.",
-                icon: (
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
-                    />
-                  </svg>
-                ),
+                title: "Pretražite usluge",
+                desc: "Odaberite kategoriju i grad. Pregledajte ponude.",
               },
               {
                 num: "02",
-                title: "Izaberite grad",
-                desc: "Fokusirajte pretragu na grad ili regiju gdje slavite.",
-                icon: (
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                    />
-                  </svg>
-                ),
+                title: "Usporedite ponude",
+                desc: "Pogledajte portfolije i javite se onima koji vam odgovaraju.",
               },
               {
                 num: "03",
-                title: "Pošaljite upit",
-                desc: "Kontaktirajte ponuđače direktno — brzo i bez komplikacija.",
-                icon: (
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                    />
-                  </svg>
-                ),
+                title: "Javite se pružaocu",
+                desc: "Pošaljite upit i dogovorite detalje direktno.",
               },
-            ].map((step) => (
+            ].map((step, i) => (
               <div
                 key={step.num}
-                className="group relative rounded-xl border border-border/40 bg-white p-6 text-center transition-all duration-200 hover:border-accent/20 hover:shadow-soft sm:p-6"
+                className="group relative flex flex-col items-center text-center p-8 sm:p-10 rounded-[1.5rem] bg-white/80 backdrop-blur-sm border border-stone-200/60 shadow-marketplace transition-all duration-500 hover:shadow-marketplace-hover hover:border-stone-200 hover:-translate-y-1"
               >
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-colors duration-300 group-hover:bg-accent group-hover:text-white">
-                  {step.icon}
+                {i !== 2 && (
+                  <div className="hidden sm:block absolute top-12 left-[65%] right-[-35%] h-px bg-gradient-to-r from-stone-200 via-stone-200/80 to-transparent" />
+                )}
+                <div className="relative z-10 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-stone-50 border border-stone-200/80 text-ink transition-all duration-500 group-hover:scale-105 group-hover:bg-ink group-hover:text-white group-hover:border-ink group-hover:shadow-marketplace-glow">
+                  <span className="font-serif text-lg sm:text-xl font-semibold">{step.num}</span>
                 </div>
-                <span className="mt-5 block text-xs font-bold uppercase tracking-[0.2em] text-accent/60">
-                  {step.num}
-                </span>
-                <h3 className="mt-2 font-serif text-lg font-bold text-ink">
+                <h3 className="mt-6 font-serif text-xl font-bold text-ink tracking-tight">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
+                <p className="mt-3 text-sm leading-relaxed text-stone-500 max-w-xs">
                   {step.desc}
                 </p>
               </div>
             ))}
           </div>
-          )}
         </div>
       </section>
 
@@ -216,20 +164,23 @@ export default function Home() {
       <section
         ref={categorySectionRef}
         id="kategorije"
-        className="relative border-t border-accent/20 bg-[#F7F4EF] py-20"
+        className="relative py-24 sm:py-32 section-pattern border-t border-stone-200/50"
       >
-        <div className="mx-auto max-w-6xl px-5 sm:px-8">
-          <div className="text-center">
-            <p className="section-label text-accent">Popularne kategorije</p>
-            <h2 className="mt-3 font-serif text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-              Odaberite uslugu koja vam je potrebna
-            </h2>
-            <p className="mt-3 text-sm text-ink/70">
-              Kliknite kategoriju i nastavite odabirom grada.
+        <div className="absolute inset-0 grain-overlay" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14 sm:mb-20">
+            <div className="max-w-xl">
+              <p className="section-label">Usluge</p>
+              <h2 className="mt-4 section-heading">
+                Kategorije usluga
+              </h2>
+            </div>
+            <p className="text-stone-500 text-sm md:text-right max-w-sm leading-relaxed">
+              Odaberite kategoriju i grad da vidite ponude.
             </p>
-            <div className="divider-ornament" />
           </div>
-          <div className="mt-16 grid grid-cols-2 gap-6 md:grid-cols-3 md:gap-8 [&>a:last-child]:col-span-2 [&>a:last-child]:md:col-span-1 [&>a:last-child]:md:col-start-2">
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {CATEGORIES.map((cat) => (
               <CategoryCard
                 key={cat.slug}

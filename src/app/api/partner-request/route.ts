@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
   const timestamp = new Date().toISOString();
 
   const text = `
-Novi biznis zahtjev – WeddingHub
+Novi biznis zahtjev – EventHub
 
 Biznis: ${data.businessName}
 Kategorija: ${categoryLabel}
@@ -140,7 +140,7 @@ Poslano: ${timestamp}
 <html>
 <head><meta charset="utf-8"></head>
 <body style="font-family:sans-serif;font-size:14px;line-height:1.6;color:#333;max-width:560px;">
-  <h2 style="font-size:18px;margin-bottom:12px;">Novi biznis zahtjev – WeddingHub</h2>
+  <h2 style="font-size:18px;margin-bottom:12px;">Novi biznis zahtjev – EventHub</h2>
   <p><strong>Biznis:</strong> ${escapeHtml(data.businessName)}</p>
   <p><strong>Kategorija:</strong> ${escapeHtml(categoryLabel)}</p>
   <p><strong>Grad:</strong> ${escapeHtml(data.city)}</p>

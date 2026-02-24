@@ -166,53 +166,61 @@ export function ProfileContactCard({
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-elevated">
-      <div className="border-b border-border bg-accent-soft/40 px-5 py-3.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-accent">
-          Kontaktiraj ponuđača
-        </p>
+    <div className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-marketplace">
+      <div className="border-b border-stone-100 bg-accent-soft/30 px-6 py-5 flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+             <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+        </span>
+        <div>
+          <p className="text-sm font-bold text-ink">
+            Kontakt informacije
+          </p>
+          <p className="text-xs text-stone-500 mt-0.5">Direktan kontakt sa pružaocem</p>
+        </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-6">
         {hasAny && (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {items.map((item) => (
               <li key={item.key}>
                 <a
                   href={item.href}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className="flex items-center gap-3 rounded-xl border border-border/50 bg-surface/40 px-3.5 py-2.5 text-sm text-ink transition-all duration-200 hover:border-accent/25 hover:bg-accent-soft/40 hover:shadow-soft"
+                  className="group flex items-center gap-4 rounded-xl border border-stone-200 bg-stone-50/50 px-4 py-3.5 text-sm text-ink transition-all duration-300 hover:border-accent/30 hover:bg-accent-soft/30 hover:shadow-sm"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white border border-stone-200 text-stone-500 transition-colors group-hover:bg-accent-soft group-hover:text-accent group-hover:border-accent/20">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       {ICON_SVG[item.icon]}
                     </svg>
                   </span>
-                  <span className={item.key === "address" ? "truncate flex-1 min-w-0" : "truncate"}>{item.displayText}</span>
-                  <span className={item.key === "address" ? "text-[10px] font-semibold uppercase text-accent/70 shrink-0" : "ml-auto text-[10px] font-semibold uppercase text-accent/70"}>
-                    {item.ctaText}
-                  </span>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-0.5">{item.ctaText}</span>
+                    <span className="truncate text-ink font-medium">{item.displayText}</span>
+                  </div>
+                  <svg className="h-4 w-4 text-stone-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
                 </a>
               </li>
             ))}
           </ul>
         )}
 
-        <div className="mt-4 space-y-2">
-          <a href="#upit" className="btn-primary block w-full py-3 text-center text-sm">
-            Pošalji upit
-          </a>
-          {hasAny && (
+        {hasAny && (
+          <div className="mt-6 pt-6 border-t border-stone-100">
             <button
               type="button"
               onClick={copyContact}
-              className="btn-secondary w-full py-2.5 text-sm"
+              className="btn-secondary w-full py-3.5 text-sm"
             >
-              {copied ? "✓ Kopirano" : "Kopiraj sve kontakte"}
+              {copied ? "✓ Kopirano" : "Kopiraj sve"}
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

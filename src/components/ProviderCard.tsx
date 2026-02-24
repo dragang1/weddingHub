@@ -72,74 +72,80 @@ export function ProviderCard({
   const displayBadges = badges.slice(0, 2);
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-border bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated hover:border-accent/15">
-      <Link href={`/profil/${provider.id}`} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden bg-accent-soft/20">
+    <article className="group overflow-hidden rounded-2xl bg-white border border-stone-200/60 shadow-marketplace transition-all duration-500 hover:-translate-y-1.5 hover:shadow-marketplace-hover hover:border-stone-200">
+      <Link href={`/profil/${provider.id}`} className="block h-full flex flex-col">
+        <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
           <Image
             src={thumb}
             alt=""
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-black/0" />
         </div>
 
-        <div className="p-5 sm:p-6">
-          <h2 className="font-serif text-lg font-bold text-ink">
-            {provider.name}
-          </h2>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-muted">
-            <svg
-              className="h-3.5 w-3.5 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-              />
-            </svg>
-            {provider.locationCity}
-          </p>
+        <div className="flex flex-col flex-1 p-6 sm:p-7">
+          <div className="flex-1">
+            <h2 className="font-serif text-xl font-bold text-ink mb-1.5">
+              {provider.name}
+            </h2>
+            <p className="flex items-center gap-2 text-sm text-stone-500 font-light">
+              <svg
+                className="h-4 w-4 text-accent shrink-0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                />
+              </svg>
+              {provider.locationCity}
+            </p>
 
-          {displayBadges.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {displayBadges.map((b) => (
-                <span
-                  key={b.key}
-                  className="inline-flex items-center rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent-hover"
-                >
-                  {b.label}
-                </span>
-              ))}
-            </div>
-          )}
+            {displayBadges.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {displayBadges.map((b) => (
+                  <span
+                    key={b.key}
+                    className="inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs font-medium text-stone-600"
+                  >
+                    {b.label}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
 
-          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-all duration-200 group-hover:gap-2.5">
-            Pogledaj profil
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </span>
+          <div className="mt-6 flex items-center justify-between border-t border-stone-100 pt-4">
+            <span className="text-xs font-semibold uppercase tracking-widest text-accent transition-colors duration-300 group-hover:text-ink">
+              Pogledaj profil
+            </span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-ink transition-all duration-300 group-hover:bg-ink group-hover:text-white group-hover:translate-x-1">
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
       </Link>
     </article>

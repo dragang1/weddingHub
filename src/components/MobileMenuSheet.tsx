@@ -90,12 +90,12 @@ export function MobileMenuSheet({ open, onClose }: MobileMenuSheetProps) {
         className="fixed inset-y-0 right-0 z-[9999] w-[min(320px,85vw)] bg-white shadow-prominent focus:outline-none"
       >
         <div className="flex h-full min-h-0 flex-col">
-          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-stone-200 px-5 py-4">
             <span className="font-serif text-lg font-bold text-ink">Meni</span>
             <button
               type="button"
               onClick={onClose}
-              className="-m-2 rounded-lg p-2 text-muted transition-colors hover:bg-accent-soft/50 hover:text-ink"
+              className="-m-2 rounded-lg p-2 text-stone-500 transition-colors hover:bg-accent-soft/50 hover:text-ink"
               aria-label="Zatvori meni"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">

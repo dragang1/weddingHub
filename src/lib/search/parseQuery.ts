@@ -1,4 +1,4 @@
-import { stripDiacritics } from "@/lib/cities";
+import { stripDiacritics, resolveCityDisplayName } from "@/lib/cities";
 import type { CategorySlug } from "@/lib/categories";
 import type { EventTypeSlug } from "@/lib/events";
 
@@ -11,19 +11,6 @@ export type ParsedSearch = {
   eventType: EventType | null;
   remaining: string;
   confidence: "high" | "medium" | "low";
-};
-
-/** Token (lowercase, no diacritics) -> official city label. Core 5 + variants. */
-const CITY_VARIANTS: Record<string, string> = {
-  sarajevo: "Sarajevo",
-  sa: "Sarajevo",
-  mostar: "Mostar",
-  tuzla: "Tuzla",
-  zenica: "Zenica",
-  "banja luka": "Banja Luka",
-  banjaluka: "Banja Luka",
-  "banja-luka": "Banja Luka",
-  bl: "Banja Luka",
 };
 
 /** Single token (normalized) -> CategorySlug. Salon/sala resolved later. */
@@ -112,19 +99,20 @@ export function parseSearchQuery(input: string): ParsedSearch {
   let eventType: EventType | null = null;
   const used = new Set<number>();
 
-  // City: check single tokens and two-word "banja luka"
+  // City: check single token and two-word (sve poznati gradovi iz cities.ts)
   for (let i = 0; i < normalized.length; i++) {
     if (city) break;
-    const t = normalized[i];
-    if (CITY_VARIANTS[t]) {
-      city = CITY_VARIANTS[t];
+    const one = resolveCityDisplayName(normalized[i]);
+    if (one) {
+      city = one;
       used.add(i);
       break;
     }
     if (i + 1 < normalized.length) {
-      const two = `${t} ${normalized[i + 1]}`;
-      if (CITY_VARIANTS[two]) {
-        city = CITY_VARIANTS[two];
+      const two = `${normalized[i]} ${normalized[i + 1]}`;
+      const twoCity = resolveCityDisplayName(two);
+      if (twoCity) {
+        city = twoCity;
         used.add(i);
         used.add(i + 1);
         break;
@@ -154,6 +142,10 @@ export function parseSearchQuery(input: string): ParsedSearch {
       category = "beauty";
       used.add(salonIndex);
     } else if (hasWedding) {
+      category = "wedding_salon";
+      used.add(salonIndex);
+    } else if (city) {
+      // "salon" + grad bez drugih riječi → svadbeni salon
       category = "wedding_salon";
       used.add(salonIndex);
     } else {

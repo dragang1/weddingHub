@@ -10,12 +10,15 @@ type CategoryCityStepProps = {
   categoryLabel: string;
   categoryPath: string;
   eventType?: EventTypeSlug;
+  /** Show "Prikaži sve ponude" link (not for wedding_salon). */
+  allowShowAll?: boolean;
 };
 
 export function CategoryCityStep({
   categoryLabel,
   categoryPath,
   eventType = "wedding",
+  allowShowAll = false,
 }: CategoryCityStepProps) {
   const router = useRouter();
   const [city, setCity] = useState("");
@@ -27,16 +30,19 @@ export function CategoryCityStep({
     setValidationMessage("");
     const trimmed = city.trim();
     if (!trimmed) {
-      setValidationMessage("Unesite grad događaja.");
+      setValidationMessage("Unesite grad.");
       return;
     }
     const citySlug = cityInputToCanonicalSlug(trimmed);
     if (!citySlug) {
-      setValidationMessage("Unesite grad događaja.");
+      setValidationMessage(
+        trimmed
+          ? "Taj grad trenutno nije u listi. Odaberite grad ispod ili probajte drugi."
+          : "Unesite grad.",
+      );
       return;
     }
-    const eventQuery =
-      eventType === "wedding" ? "" : `?event=${eventType}`;
+    const eventQuery = eventType === "wedding" ? "" : `?event=${eventType}`;
     router.push(`${categoryPath}/${citySlug}${eventQuery}`);
   }
 
@@ -48,9 +54,9 @@ export function CategoryCityStep({
   return (
     <div className="card min-w-0 overflow-hidden">
       <div className="bg-accent-soft/30 px-4 py-3 sm:px-6 sm:py-4 md:px-8">
-        <p className="section-label text-accent">Korak 2</p>
+        <p className="section-label text-accent">Grad</p>
         <p className="mt-1 font-serif text-base font-bold text-ink break-words">
-          Unesite grad događaja
+          U kojem gradu vam treba usluga?
         </p>
       </div>
 
@@ -70,7 +76,6 @@ export function CategoryCityStep({
               setValidationMessage("");
             }}
             onSubmit={() => formRef.current?.requestSubmit()}
-            autoFocus
             aria-invalid={!!validationMessage}
             aria-describedby={
               validationMessage ? "category-city-error" : undefined
@@ -98,7 +103,7 @@ export function CategoryCityStep({
                 className={`rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/20 ${
                   city === name
                     ? "border-accent/40 bg-accent-soft text-accent-hover shadow-soft"
-                    : "border-border bg-white text-ink hover:border-accent/30 hover:bg-accent-soft/40"
+                    : "border-stone-200 bg-white text-ink hover:border-accent/30 hover:bg-accent-soft/40"
                 }`}
               >
                 {name}
@@ -108,8 +113,19 @@ export function CategoryCityStep({
         </div>
 
         <button type="submit" className="btn-primary w-full sm:w-auto">
-          Prikaži ponudu
+          Prikaži ponude
         </button>
+
+        {allowShowAll && (
+          <p className="pt-2 text-sm text-stone-500">
+            <a
+              href={`${categoryPath}/sve${eventType === "wedding" ? "" : `?event=${eventType}`}`}
+              className="font-medium text-accent hover:text-accent-hover underline underline-offset-2 focus:outline-none focus:ring-2 focus:ring-accent/20 rounded"
+            >
+              Prikaži sve ponude u BiH
+            </a>
+          </p>
+        )}
       </form>
     </div>
   );

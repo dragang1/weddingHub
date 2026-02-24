@@ -12,10 +12,12 @@ type Props = {
 export default async function DekoracijaCityPage({ params, searchParams }: Props) {
   const { city: citySlug } = await params;
   const sp = await searchParams;
-  const canonical = cityInputToCanonicalSlug(citySlug);
-  if (canonical && canonical !== citySlug) {
-    const eventQ = sp.event && sp.event !== "wedding" ? `?event=${sp.event}` : "";
-    redirect(`/dekoracija/${canonical}${eventQ}`);
+  if (citySlug !== "sve") {
+    const canonical = cityInputToCanonicalSlug(citySlug);
+    if (canonical && canonical !== citySlug) {
+      const eventQ = sp.event && sp.event !== "wedding" ? `?event=${sp.event}` : "";
+      redirect(`/dekoracija/${canonical}${eventQ}`);
+    }
   }
   return (
     <CategoryCityResults

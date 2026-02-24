@@ -40,8 +40,13 @@ export async function CategoryCityResults({
   subcategory,
   q,
 }: CategoryCityResultsProps) {
-  const cityDisplay = prettyCityFromSlug(citySlug);
-  const cityFilter = cityWhereClause(cityDisplay, categorySlug);
+  const isShowAll = citySlug === "sve";
+  const cityDisplay = isShowAll
+    ? "Cijela BiH"
+    : prettyCityFromSlug(citySlug);
+  const cityFilter = isShowAll
+    ? {}
+    : cityWhereClause(cityDisplay, categorySlug);
   const eventType = parseEventType(eventParam ?? null);
 
   const whereBase = {
@@ -98,38 +103,39 @@ export async function CategoryCityResults({
   const subtext = categoryEventSubtext(categorySlug, eventType);
 
   return (
-    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-surface">
+    <div className="min-h-screen min-w-0 flex flex-col overflow-x-hidden bg-cream">
       <SiteHeader />
 
       {/* Page header */}
-      <header className="border-b border-border bg-white">
-        <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-6 md:px-8">
-          <nav className="flex flex-wrap items-center gap-x-2 text-sm text-muted" aria-label="Breadcrumb">
+      <header className="border-b border-stone-200 bg-white/90 backdrop-blur-sm shadow-sm relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-surface to-white pointer-events-none" aria-hidden />
+        <div className="relative mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+          <nav className="flex flex-wrap items-center gap-x-3 text-xs font-semibold uppercase tracking-widest text-stone-500 mb-6" aria-label="Breadcrumb">
             <Link
               href="/"
-              className="transition-colors hover:text-accent"
+              className="transition-colors hover:text-ink"
             >
               Početna
             </Link>
             <span className="text-border">/</span>
             <span className="truncate">{label}</span>
             <span className="text-border">/</span>
-            <span className="font-medium text-ink truncate">{cityDisplay}</span>
+            <span className="text-accent truncate">{cityDisplay}</span>
           </nav>
-          <h1 className="mt-3 break-words font-serif text-xl font-bold tracking-tight text-ink sm:text-2xl md:text-3xl lg:text-4xl">
-            {label} {headingPrefix} u {cityDisplay}
+          <h1 className="font-serif text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl lg:text-6xl max-w-3xl">
+            {label} {headingPrefix} {isShowAll ? "u cijeloj BiH" : `u ${cityDisplay}`}
           </h1>
-          <p className="mt-1.5 text-sm text-muted sm:text-base">{subtext}</p>
+          <p className="mt-4 text-base sm:text-lg text-stone-500 font-light max-w-2xl">{subtext}</p>
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-6xl min-w-0 flex-1 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+      <div className="mx-auto w-full max-w-7xl min-w-0 flex-1 px-5 py-8 sm:px-8 sm:py-12">
         {/* Cross-category links */}
-        <section className="min-w-0" aria-label="Ostale kategorije u istom gradu">
-          <h2 className="section-label mb-3">
-            Treba ti još nešto u {cityDisplay}?
+        <section className="min-w-0 mb-10" aria-label={isShowAll ? "Ostale kategorije" : "Ostale kategorije u istom gradu"}>
+          <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-4">
+            {isShowAll ? "Istražite ostale kategorije" : `Istražite još u ${cityDisplay}`}
           </h2>
-          <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory md:flex-wrap md:overflow-visible scrollbar-none">
+          <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none">
             {CATEGORIES.filter((cat) => cat.slug !== categorySlug).map(
               (cat) => (
                 <Link
@@ -139,10 +145,10 @@ export async function CategoryCityResults({
                       ? `${cat.path}/${citySlug}`
                       : `${cat.path}/${citySlug}?event=${eventType}`
                   }
-                  className="flex shrink-0 snap-start items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm text-muted shadow-soft transition-all duration-200 hover:border-accent/40 hover:text-ink hover:shadow-soft-lg focus:outline-none focus:ring-2 focus:ring-accent/20"
+                  className="group flex shrink-0 snap-start items-center gap-3 rounded-full border border-stone-200 bg-white px-5 py-2.5 text-sm font-medium text-ink transition-all duration-300 hover:border-stone-300 hover:shadow-marketplace focus:outline-none"
                 >
-                  <span className="text-ink/70" aria-hidden>
-                    <CategoryIcon slug={cat.slug} className="h-4 w-4" strokeWidth={1.75} />
+                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-stone-100 text-stone-500 transition-colors group-hover:bg-ink group-hover:text-white" aria-hidden>
+                    <CategoryIcon slug={cat.slug} className="h-3.5 w-3.5" strokeWidth={2} />
                   </span>
                   <span>{cat.label}</span>
                 </Link>
@@ -152,10 +158,10 @@ export async function CategoryCityResults({
         </section>
 
         {/* Main content grid */}
-        <div className="mt-8 grid w-full min-w-0 grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-[minmax(0,280px)_1fr] xl:grid-cols-[minmax(0,300px)_1fr]">
+        <div className="mt-4 grid w-full min-w-0 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,320px)_1fr] xl:gap-12">
           {/* Sidebar */}
-          <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
-            <div className="card p-4 sm:p-5">
+          <aside className="min-w-0 lg:sticky lg:top-28 lg:self-start">
+            <div className="card p-6 sm:p-8">
               <ListingFilterBar
                 key={`${citySlug}-${eventType}`}
                 basePath={basePath}
@@ -171,18 +177,18 @@ export async function CategoryCityResults({
 
           {/* Results */}
           <div className="min-w-0 overflow-hidden">
-            <p className="mb-4 text-sm text-muted sm:mb-6">
-              <span className="font-semibold text-ink">
+            <p className="mb-6 text-sm text-stone-500 uppercase tracking-widest font-semibold">
+              <span className="text-ink mr-2">
                 {providers.length}
-              </span>{" "}
+              </span>
               {providers.length === 1 ? "rezultat" : "rezultata"}
             </p>
 
             {providers.length === 0 ? (
-              <div className="card flex flex-col items-center justify-center p-6 text-center sm:p-8 md:p-12">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft">
+              <div className="card flex flex-col items-center justify-center p-10 text-center sm:p-16 border-dashed border-2">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-stone-50 border border-stone-200">
                   <svg
-                    className="h-7 w-7 text-accent/60"
+                    className="h-8 w-8 text-stone-400"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={1.5}
@@ -195,13 +201,13 @@ export async function CategoryCityResults({
                     />
                   </svg>
                 </div>
-                <h2 className="mt-5 font-serif text-xl font-bold text-ink">
-                  Trenutno nema ponuđača u ovom gradu.
+                <h2 className="mt-6 font-serif text-2xl font-bold text-ink">
+                  Trenutno nema ponuđača u ovom gradu
                 </h2>
-                <p className="mt-2 text-sm text-muted">
-                  Pokušajte drugi grad ili pogledajte najtraženije lokacije.
+                <p className="mt-3 text-base text-stone-500 font-light max-w-md mx-auto">
+                  Pokušajte promijeniti filtere ili pogledajte naše najtraženije lokacije za ovu uslugu.
                 </p>
-                <div className="mt-6 flex flex-wrap justify-center gap-2">
+                <div className="mt-8 flex flex-wrap justify-center gap-3">
                   {POPULAR_CITY_NAMES.map((name) => (
                     <Link
                       key={name}
@@ -210,7 +216,7 @@ export async function CategoryCityResults({
                           ? `${basePath}/${cityInputToCanonicalSlug(name)}`
                           : `${basePath}/${cityInputToCanonicalSlug(name)}?event=${eventType}`
                       }
-                      className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-ink transition-all duration-200 hover:border-accent/40 hover:bg-accent-soft/50 focus:outline-none focus:ring-2 focus:ring-accent/20"
+                      className="rounded-full border border-stone-200 bg-white px-5 py-2 text-sm font-medium text-ink transition-all duration-300 hover:border-stone-300 hover:shadow-marketplace"
                     >
                       {name}
                     </Link>
@@ -218,7 +224,7 @@ export async function CategoryCityResults({
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {providers.map((p) => (
                   <ProviderCard
                     key={p.id}

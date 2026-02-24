@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useCallback } from "react";
 import { cityInputToCanonicalSlug } from "@/lib/cities";
-import { EVENT_TYPES, parseEventType } from "@/lib/events";
+import { parseEventType } from "@/lib/events";
 import type { EventTypeSlug } from "@/lib/events";
 import { CityAutocompleteInput } from "@/components/CityAutocompleteInput";
 
@@ -70,23 +70,10 @@ export function ListingFilterBar({
     router.push(`${basePath}/${citySlug}`);
   }, [basePath, citySlug, router]);
 
-  const subcategory = searchParams.get("subcategory") ?? "";
   const hasActiveFilters =
-    subcategory || searchParams.get("q") || eventType !== "wedding";
-
-  const updateSubcategory = (value: string) => {
-    const qs = buildQuery({ subcategory: value });
-    router.push(
-      qs ? `${basePath}/${citySlug}?${qs}` : `${basePath}/${citySlug}`
-    );
-  };
-
-  const updateEventType = (value: EventTypeSlug) => {
-    const qs = buildQuery({ event: value });
-    router.push(
-      qs ? `${basePath}/${citySlug}?${qs}` : `${basePath}/${citySlug}`
-    );
-  };
+    searchParams.get("subcategory") ||
+    searchParams.get("q") ||
+    eventType !== "wedding";
 
   const content = (
     <div
@@ -123,59 +110,6 @@ export function ListingFilterBar({
         </div>
       </div>
 
-      {/* Event type */}
-      <div className={variant === "sidebar" ? "" : "sm:max-w-[180px]"}>
-        <label
-          htmlFor="listing-event"
-          className="mb-1.5 block text-xs font-semibold text-muted"
-        >
-          Prilika
-        </label>
-        <select
-          id="listing-event"
-          value={eventType}
-          onChange={(e) =>
-            updateEventType(
-              parseEventType(e.target.value) as EventTypeSlug
-            )
-          }
-          className="input-field py-2.5"
-          aria-label="Prilika"
-        >
-          {EVENT_TYPES.map((ev) => (
-            <option key={ev.slug} value={ev.slug}>
-              {ev.icon} {ev.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Subcategory */}
-      {subcategories.length > 0 && (
-        <div className={variant === "sidebar" ? "" : "sm:max-w-[200px]"}>
-          <label
-            htmlFor="listing-subcategory"
-            className="mb-1.5 block text-xs font-semibold text-muted"
-          >
-            Podkategorija
-          </label>
-          <select
-            id="listing-subcategory"
-            value={subcategory}
-            onChange={(e) => updateSubcategory(e.target.value)}
-            className="input-field py-2.5"
-            aria-label="Podkategorija"
-          >
-            <option value="">Sve</option>
-            {subcategories.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
       {/* Reset */}
       {hasActiveFilters && (
         <button
@@ -204,7 +138,7 @@ export function ListingFilterBar({
 
   if (variant === "bar") {
     return (
-      <div className="sticky top-0 z-10 border-b border-border glass py-4">
+      <div className="sticky top-0 z-10 border-b border-stone-200 glass py-4">
         {content}
       </div>
     );

@@ -1,4 +1,4 @@
-const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? "https://weddinghub.example.com";
+const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? "https://eventhub.example.com";
 
 export default function robots() {
   return {
