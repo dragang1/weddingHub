@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
   const categorySlug = categoryInput ? parseCategory(categoryInput) : null;
   if (categoryInput != null && categoryInput !== "" && categorySlug === null) {
     return Response.json(
-      { error: "Invalid category", allowed: "music, photo_video, wedding_salon, cakes, decoration, transport, beauty" },
+      { error: "Invalid category", allowed: "music, photo_video, wedding_salon, cakes, decoration, transport, beauty, wedding_dresses" },
       { status: 400 }
     );
   }

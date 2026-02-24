@@ -53,6 +53,12 @@ const CATEGORY_KEYWORDS: Record<string, CategorySlug> = {
   barber: "beauty",
   nokti: "beauty",
   makeup: "beauty",
+  vjencanice: "wedding_dresses",
+  vjencanica: "wedding_dresses",
+  haljina: "wedding_dresses",
+  haljine: "wedding_dresses",
+  svadbeno: "wedding_dresses",
+  rublje: "wedding_dresses",
 };
 
 const BEAUTY_TOKENS = new Set(["sminka", "frizura", "frizer", "barber", "nokti", "makeup"]);

@@ -5,7 +5,8 @@ export type CategorySlug =
   | "cakes"
   | "decoration"
   | "transport"
-  | "beauty";
+  | "beauty"
+  | "wedding_dresses";
 
 type CategoryConfig = {
   slug: CategorySlug;
@@ -64,6 +65,12 @@ export const CATEGORIES: CategoryConfig[] = [
     label: "Ljepota",
     path: "/ljepota",
     description: "Frizura i šminka.",
+  },
+  {
+    slug: "wedding_dresses",
+    label: "Vjenčanice",
+    path: "/vjencanice",
+    description: "Izbor salona za vjenčanicu.",
   },
 ];
 

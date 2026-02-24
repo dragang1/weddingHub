@@ -8,6 +8,7 @@ import {
   Flower2,
   Car,
   Sparkles,
+  Shirt,
   LucideIcon,
 } from "lucide-react";
 import type { CategorySlug } from "@/lib/categories";
@@ -20,6 +21,7 @@ const ICON_MAP: Record<CategorySlug, LucideIcon> = {
   decoration: Flower2,
   transport: Car,
   beauty: Sparkles,
+  wedding_dresses: Shirt,
 };
 
 type CategoryIconProps = {

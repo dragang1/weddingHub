@@ -13,7 +13,7 @@ const createProviderSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1),
   category: z.string().refine((s) => parseCategory(s) !== null, {
-    message: "Invalid category; use one of: music, photo_video, wedding_salon, cakes, decoration, transport, beauty",
+    message: "Invalid category; use one of: music, photo_video, wedding_salon, cakes, decoration, transport, beauty, wedding_dresses",
   }),
   subcategory: z.string().optional(),
   locationCity: z.string().min(1),
